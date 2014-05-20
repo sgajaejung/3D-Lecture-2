@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2DTransform", "2DTransform\2DTransform.vcproj", "{765185B8-34A2-4B2F-A1A5-54A872D9654C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2DShading", "2DShading\2DShading.vcproj", "{7CB09729-E2A7-4780-87CD-677788295685}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{765185B8-34A2-4B2F-A1A5-54A872D9654C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{765185B8-34A2-4B2F-A1A5-54A872D9654C}.Debug|Win32.Build.0 = Debug|Win32
+		{765185B8-34A2-4B2F-A1A5-54A872D9654C}.Release|Win32.ActiveCfg = Release|Win32
+		{765185B8-34A2-4B2F-A1A5-54A872D9654C}.Release|Win32.Build.0 = Release|Win32
+		{7CB09729-E2A7-4780-87CD-677788295685}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7CB09729-E2A7-4780-87CD-677788295685}.Debug|Win32.Build.0 = Debug|Win32
+		{7CB09729-E2A7-4780-87CD-677788295685}.Release|Win32.ActiveCfg = Release|Win32
+		{7CB09729-E2A7-4780-87CD-677788295685}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
