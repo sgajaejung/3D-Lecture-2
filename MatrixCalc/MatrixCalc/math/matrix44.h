@@ -1,0 +1,30 @@
+#pragma once
+
+
+struct vector3;
+struct Matrix44
+{
+	union
+	{
+		struct
+		{
+			float	_11, _12, _13, _14;
+			float	_21, _22, _23, _24;
+			float	_31, _32, _33, _34;
+			float	_41, _42, _43, _44;
+		};
+		float	m[4][4];
+	};
+
+	Matrix44();
+	inline void SetIdentity();
+	void	SetRotationX( const float angle );
+	void	SetRotationY( const float angle );
+	void	SetRotationZ( const float angle );
+	void	SetTranslate( const Vector3& pos );
+	void	SetScale( const Vector3& scale);
+	Vector3 GetPosition() const;
+
+	Matrix44 operator * ( const Matrix44& rhs ) const;
+	Matrix44& operator *= ( const Matrix44& rhs );
+};
