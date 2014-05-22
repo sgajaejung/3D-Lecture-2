@@ -18,6 +18,8 @@ vector<int> g_indices;
 Matrix44 g_matWorld1;
 Matrix44 g_matLocal1;
 Matrix44 g_matView;
+Matrix44 g_matProjection;
+Matrix44 g_matViewPort;
 Vector3 g_cameraPos(0,200,-200);
 Vector3 g_cameraLookat(0,0,0);
 
@@ -162,7 +164,7 @@ void Init()
 	//       |                                                       |
 	//       (-50,-50, -50)  ----------------- (+50, -50, -50)
 
-	const float w = 80.f;
+	const float w = 30.f;
 	g_vertices.reserve(128);
 	g_vertices.push_back( Vector3(-w,w,w) );
 	g_vertices.push_back( Vector3(w,w,w) );
@@ -219,12 +221,23 @@ void Init()
 	g_indices.push_back(6);
 	g_indices.push_back(5);
 
-
-	g_matWorld1.SetTranslate(Vector3(400,300,0));
+	g_matWorld1.SetTranslate(Vector3(0,0,0));
 
 	Vector3 dir = g_cameraLookat - g_cameraPos;
 	dir.Normalize();
 	g_matView.SetView(g_cameraPos, dir, Vector3(0,1,0));
+	g_matProjection.SetProjection( MATH_PI / 4.f, 1.0f, 1.0f, 100.0f );
+
+	RECT cr;
+	::GetClientRect(g_hWnd, &cr);
+	const float width = (float)(cr.right-cr.left);
+	const float height = (float)(cr.bottom - cr.top);
+	g_matViewPort._11 = width/2;
+	g_matViewPort._22 = -height/2;
+	g_matViewPort._33 = 0;
+	g_matViewPort._41 = width/2;
+	g_matViewPort._42 = height/2;
+	g_matViewPort._43 = 0;
 }
 
 
@@ -307,7 +320,7 @@ void Paint(HWND hWnd, HDC hdc)
 	FillRect(hdcMem, &rc, hbrBkGnd);
 	DeleteObject(hbrBkGnd);
 
-	RenderIndices(hdcMem, g_vertices, g_indices, g_matLocal1 * g_matWorld1);
+	RenderIndices(hdcMem, g_vertices, g_indices, g_matLocal1 * g_matWorld1 * g_matView);
 
 	BitBlt(hdc, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, hdcMem, 0, 0, SRCCOPY);
 	SelectObject(hdcMem, hbmOld);
