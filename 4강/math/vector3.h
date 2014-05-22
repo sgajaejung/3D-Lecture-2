@@ -26,7 +26,7 @@ struct Vector3
 	Vector3& operator /= ( const Vector3& rhs );
 
 	Vector3 operator * ( const Matrix44& rhs ) const;
-	Vector3& operator *= ( Matrix44& rhs );
+	Vector3& operator *= ( const Matrix44& rhs );
 
 	template <class T>
 	Vector3 operator * ( T t ) const {

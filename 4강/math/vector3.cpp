@@ -102,7 +102,7 @@ Vector3 Vector3::operator * ( const Matrix44& rhs ) const
 }
 
 
-Vector3& Vector3::operator *= ( Matrix44& rhs )
+Vector3& Vector3::operator *= ( const Matrix44& rhs )
 {
 	float	RHW = 1.0f / (x * rhs._14 + y * rhs._24 + z * rhs._34 + rhs._44);
 	if (RHW >= FLT_MAX)
