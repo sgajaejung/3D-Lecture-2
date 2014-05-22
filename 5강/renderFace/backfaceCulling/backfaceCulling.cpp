@@ -146,74 +146,12 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 void Init()
 {
 	// vertices1
-	//       (-50,+50, +50)  ----------------- (+50, +50, +50)
-	//       |                                                       |
-	//       |                         +                           |
-	//       |                                                       |
-	//       (-50,+50, -50)  ----------------- (+50, +50, -50)
-	//
-	//       (-50,-50, +50)  ----------------- (+50, -50, +50)
-	//       |                                                       |
-	//       |                         +                           |
-	//       |                                                       |
-	//       (-50,-50, -50)  ----------------- (+50, -50, -50)
-
 	const float w = 80.f;
 	g_vertices.reserve(128);
-	g_vertices.push_back( Vector3(-w,w,w) );
-	g_vertices.push_back( Vector3(w,w,w) );
-	g_vertices.push_back( Vector3(w,w,-w) );
-	g_vertices.push_back( Vector3(-w,w,-w) );
-
-	g_vertices.push_back( Vector3(-w,-w,w) );
-	g_vertices.push_back( Vector3(w,-w,w) );
-	g_vertices.push_back( Vector3(w,-w,-w) );
-	g_vertices.push_back( Vector3(-w,-w,-w) );
 
 
 	g_indices.reserve(128);
-	// top
-	g_indices.push_back(0);
-	g_indices.push_back(2);
-	g_indices.push_back(3);
-	g_indices.push_back(0);
-	g_indices.push_back(1);
-	g_indices.push_back(2);
-	// front
-	g_indices.push_back(3);
-	g_indices.push_back(2);
-	g_indices.push_back(7);
-	g_indices.push_back(2);
-	g_indices.push_back(6);
-	g_indices.push_back(7);
-	// back
-	g_indices.push_back(1);
-	g_indices.push_back(4);
-	g_indices.push_back(5);
-	g_indices.push_back(1);
-	g_indices.push_back(0);
-	g_indices.push_back(4);
-	// left
-	g_indices.push_back(3);
-	g_indices.push_back(4);
-	g_indices.push_back(0);
-	g_indices.push_back(7);
-	g_indices.push_back(4);
-	g_indices.push_back(3);
-	// right
-	g_indices.push_back(2);
-	g_indices.push_back(5);
-	g_indices.push_back(6);
-	g_indices.push_back(2);
-	g_indices.push_back(1);
-	g_indices.push_back(5);
-	// bottom
-	g_indices.push_back(4);
-	g_indices.push_back(7);
-	g_indices.push_back(6);
-	g_indices.push_back(4);
-	g_indices.push_back(6);
-	g_indices.push_back(5);
+
 	
 	g_matWorld1.SetTranslate(Vector3(300,300,0));
 	//g_matWorld2.SetTranslate(Vector3(400,200,0));
