@@ -3,6 +3,108 @@
 @@item Max Script ---------------------------------------
 
 
+@@item 1. 3DMax 상의 모든 오브젝트를 모아서 저장한다.
+fn CollectObject = 
+(
+	g_varSetMeshes = #()
+
+	for i=1 to objects.count do
+	(
+		append g_varSetMeshes objects[i]
+	)
+)
+
+
+@@item 2. CollectObject 함수를 호출한다.
+	CollectObject()
+
+
+
+@@item 3. 버텍스 정보를 모아서 리턴하는 함수.
+fn CollectVertex obj = 
+(
+	varSetVertex= #()
+	for i=1 to obj.numverts do
+	(
+		v = getvert obj i
+		append varSetVertex v
+	)
+	varSetVertex
+)
+
+
+@@item 4. 오브젝트의 버텍스 정보를 파일에 저장한다.
+fn WriteVertex obj = 
+(
+	varSetVertice = CollectVertex obj
+
+	format "VERTEX = %\n" varSetVertice.count to:Outfile
+	for i=1 to varSetVertice.count do
+	(
+		vtx = (ConvertToD3D_POS varSetVertice[ i]) 
+		format "% % %\n" vtx.x vtx.y vtx.z to:Outfile
+	)
+)
+
+
+@@item 5. 3DMax 좌표를 Direct3D 좌표계로 변환하는 함수.
+fn ConvertToD3D_POS max_pos =
+(
+	local d3d_pos = [0,0,0]
+	d3d_pos.x = max_pos.x
+	d3d_pos.y = max_pos.z
+	d3d_pos.z = max_pos.y
+	
+	d3d_pos
+)
+
+
+@@item 6. 인덱스 정보를 모아서 리턴하는 함수
+fn CollectIndex obj = 
+(
+	varSetIndex = #()
+	for i=1 to obj.numfaces do
+	(
+		v = copy (getface obj i)
+		append varSetIndex v
+	)
+	varSetIndex
+)
+
+
+@@item 7. 오브젝트의 인덱스 정보를 파일에 저장한다.
+fn WriteIndex obj = 
+(
+	varSetIndex = CollectIndex obj
+
+	format "INDEX = %\n" varSetIndex.count to:Outfile
+	for i=1 to varSetIndex.count do
+	(
+		index = (ConvertToD3D_INDEX varSetIndex[ i])
+		format "% % %\n" (index.x as integer) (index.y as integer) (index.z as integer) to:Outfile
+	)
+)
+
+
+@@item 8. 3DMax 인덱스 버퍼 순서를 Direct3D 인덱스 버퍼 순서로 변환.
+fn ConvertToD3D_INDEX max_index =
+(
+	local d3d_index = [0,0,0]
+	d3d_index.x = max_index.x - 1
+	d3d_index.y = max_index.z - 1
+	d3d_index.z = max_index.y - 1
+
+	d3d_index
+)
+
+
+@@item 9. WriteVertex, WriteIndex 함수를 호출한다.
+			WriteVertex g_varSetMeshes[ i]
+			WriteIndex g_varSetMeshes[ i]
+
+
+
+
 @@item RenderModel --------------------------------------
 
 @@item 1. 카메라 조정에 필요한 변수를 선언한다.
