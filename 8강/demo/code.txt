@@ -1,0 +1,36 @@
+
+
+@@item Max Script ---------------------------------------
+
+
+@@item 1. WriteNormal 함수를 구현한다.
+fn WriteNormal obj = 
+(
+	varSetNormal = CollectNormals obj
+
+	format "FACE-NORMAL = %\n" varSetNormal.count to:Outfile
+	for i=1 to varSetNormal.count do
+	(
+		norm = (ConvertToD3D_POS varSetNormal[ i])
+		format "% % %\n" norm.x norm.y norm.z to:Outfile
+	)
+)
+
+
+@@item 2. CollectNormals 함수를 구현한다.
+fn CollectNormals obj = 
+(
+	varSetNormal = #()
+	for i=1 to obj.numfaces do
+	(
+		local normal = normalize (getFaceNormal obj i)
+		append varSetNormal normal
+	)
+	varSetNormal
+)
+
+
+@@item 3. WriteNormal 함수를 호출한다.
+			WriteNormal g_varSetMeshes[ i]
+
+
