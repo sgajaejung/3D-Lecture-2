@@ -21,6 +21,8 @@ Matrix44 g_matLocal1;
 Matrix44 g_matView;
 Matrix44 g_matProjection;
 Matrix44 g_matViewPort;
+Vector3 g_cameraPos(0,1000,-1000);
+Vector3 g_cameraLookat(0,0,0);
 
 
 // 콜백 프로시져 함수 프로토 타입
@@ -29,7 +31,7 @@ void Init();
 void MainLoop(int elapse_time);
 void	Render(HWND hWnd);
 void	Paint(HWND hWnd, HDC hdc);
-
+bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices );
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, 
@@ -137,8 +139,32 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		break;
 
 	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE)
+		switch (wParam)
+		{
+		case VK_ESCAPE:
 			::DestroyWindow(hWnd);
+			break;
+
+		case VK_LEFT:
+		case VK_RIGHT:
+			{
+				g_cameraPos.x += (wParam==VK_RIGHT)? 100.f : -100.f;
+				Vector3 dir = g_cameraLookat - g_cameraPos;
+				dir.Normalize();
+				g_matView.SetView(g_cameraPos, dir, Vector3(0,1,0));
+			}
+			break;
+
+		case VK_UP:
+		case VK_DOWN:
+			{
+				g_cameraPos.z += (wParam==VK_UP)? 100.f : -100.f;
+				Vector3 dir = g_cameraLookat - g_cameraPos;
+				dir.Normalize();
+				g_matView.SetView(g_cameraPos, dir, Vector3(0,1,0));
+			}
+			break;
+		}
 		break;
 	case WM_DESTROY: //윈도우가 파괴된다면..
 		PostQuitMessage(0);	//프로그램 종료 요청 ( 메시지 루프를 빠져나가게 된다 )
@@ -150,8 +176,20 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 void Init()
 {
+	ReadModelFile("../../media/sphere.dat", g_vertices, g_indices);
+
 	g_matWorld1.SetTranslate(Vector3(0,0,0));
 
+	Vector3 dir = g_cameraLookat - g_cameraPos;
+	dir.Normalize();
+	g_matView.SetView(g_cameraPos, dir, Vector3(0,1,0));
+	g_matProjection.SetProjection( MATH_PI / 4.f, 1.0f, 1.0f, 100.0f );
+
+	RECT cr;
+	::GetClientRect(g_hWnd, &cr);
+	const float width = (float)(cr.right-cr.left);
+	const float height = (float)(cr.bottom - cr.top);
+	g_matViewPort.SetViewport(width, height);
 }
 
 
@@ -181,6 +219,52 @@ void	Render(HWND hWnd)
 }
 
 
+
+bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices )
+{
+	using namespace std;
+	ifstream fin(fileName.c_str());
+	if (!fin.is_open())
+		return false;
+
+	string vtx, vtx_eq;
+	int numVertices;
+	fin >> vtx >> vtx_eq >> numVertices;
+
+	if (numVertices <= 0)
+		return  false;
+
+	vertices.resize(numVertices);
+
+	float num1, num2, num3;
+	for (int i = 0; i < numVertices; i++)
+	{
+		fin >> num1 >> num2 >> num3;
+		vertices[i] = Vector3(num1, num2, num3);
+	}
+
+	string idx, idx_eq;
+	int numIndices;
+	fin >> idx >> idx_eq >> numIndices;
+
+	if (numIndices <= 0)
+		return false;
+
+	indices.resize(numIndices*3);
+
+	int num4, num5, num6;
+	for (int i = 0; i < numIndices*3; i+=3)
+	{
+		fin >> num4 >> num5 >> num6;
+		indices[ i] = num4;
+		indices[ i+1] = num5;
+		indices[ i+2] = num6;	
+	}
+
+	return true;
+}
+
+
 void RenderVertices(HDC hdc, const vector<Vector3> &vertices, const Matrix44 &tm)
 {
 	for (unsigned int i=0; i < vertices.size(); ++i)
@@ -198,7 +282,8 @@ void RenderVertices(HDC hdc, const vector<Vector3> &vertices, const Matrix44 &tm
 void RenderIndices(HDC hdc, const vector<Vector3> &vertices, const vector<int> &indices, const Matrix44 &tm, 
 	const Matrix44 &vpv)
 {
-	Vector3 camDir(0,0,1);
+	Vector3 camDir = g_cameraLookat - g_cameraPos;
+	camDir.Normalize();
 
 	for (unsigned int i=0; i < indices.size(); i+=3)
 	{
@@ -220,10 +305,15 @@ void RenderIndices(HDC hdc, const vector<Vector3> &vertices, const vector<int> &
 		if (n.DotProduct(camDir) > 0)
 			continue;
 
+		p1 = p1 * vpv;
+		p2 = p2 * vpv;
+		p3 = p3 * vpv;
+
 		Rasterizer::Color color(255,0,0,1);
 		Rasterizer::DrawLine(hdc, color, p1.x, p1.y,color, p2.x, p2.y);
 		Rasterizer::DrawLine(hdc, color, p1.x, p1.y,color, p3.x, p3.y);
 		Rasterizer::DrawLine(hdc, color, p3.x, p3.y,color, p2.x, p2.y);
+		//Rasterizer::DrawTriangle(hdc, color, p1.x, p1.y, color, p2.x, p2.y, color, p3.x, p3.y);
 	}
 }
 

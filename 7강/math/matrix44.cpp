@@ -163,3 +163,15 @@ void Matrix44::SetProjection(	const float fov, const float aspect, const float n
 	_44 = 1.0f;
 	_44 = 0.f;
 }
+
+
+void Matrix44::SetViewport( const float width, const float height )
+{
+	SetIdentity();
+	_11 = width/2;
+	_22 = -height/2;
+	_33 = 0;
+	_41 = width/2;
+	_42 = height/2;
+	_43 = 0;
+}
