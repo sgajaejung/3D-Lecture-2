@@ -1,6 +1,14 @@
 
 #include "math.h"
+#include "vector4.h"
 
+
+Vector3::Vector3(const Vector4 &rhs) 
+{
+	x = rhs.x;
+	y = rhs.y;
+	z = rhs.z;
+}
 
 bool Vector3::IsEmpty() const
 {
@@ -132,4 +140,15 @@ Vector3 Vector3::CrossProduct( const Vector3& v ) const
 		(y * v.z) - (z * v.y), 
 		(z * v.x) - (x * v.z), 
 		(x * v.y) - (y * v.x) );
+}
+
+
+Vector3 Vector3::MultiplyNormal( const Matrix44& rhs ) const
+{
+	Vector3 v;
+	v.x = x * rhs._11 + y * rhs._21 + z * rhs._31;
+	v.y = x * rhs._12 + y * rhs._22 + z * rhs._32;
+	v.z = x * rhs._13 + y * rhs._23 + z * rhs._33;
+	v.Normalize();
+	return v;
 }
