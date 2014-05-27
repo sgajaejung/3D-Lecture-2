@@ -15,6 +15,7 @@ const int WINPOS_Y = 0; //초기 윈도우 시작 위치 Y
 
 HWND g_hWnd;
 vector<Vector3> g_vertices;
+vector<Vector3> g_normals;
 vector<int> g_indices;
 Matrix44 g_matWorld1;
 Matrix44 g_matLocal1;
@@ -31,7 +32,8 @@ void Init();
 void MainLoop(int elapse_time);
 void	Render(HWND hWnd);
 void	Paint(HWND hWnd, HDC hdc);
-bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices);
+bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices, 
+	vector<Vector3> &normals);
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, 
@@ -194,7 +196,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 void Init()
 {
-	ReadModelFile("../../media/model_normal.dat", g_vertices, g_indices);
+	ReadModelFile("../../media/model_normal.dat", g_vertices, g_indices, g_normals);
 
 	g_matWorld1.SetTranslate(Vector3(0,0,0));
 
@@ -238,7 +240,8 @@ void	Render(HWND hWnd)
 
 
 
-bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices)
+bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices,
+	vector<Vector3> &normals)
 {
 	using namespace std;
 	ifstream fin(fileName.c_str());
@@ -279,6 +282,39 @@ bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<in
 		indices[ i+2] = num6;	
 	}
 
+
+	string norm;
+	int numNormal;
+	fin >> norm >> eq >> numNormal;
+
+	normals.resize(numVertices);
+
+	if (numNormal > 0)
+	{
+		float num1, num2, num3;
+		vector<int> vertCount(numVertices, 0);
+		for (int i = 0; i < numNormal; i++)
+		{
+			fin >> num1 >> num2 >> num3;
+			Vector3 n(num1, num2, num3);
+
+			// 법선벡터의 평균을 구해서 할당한다.
+			for (int k=0; k < 3; ++k)
+			{
+				const int vtxIdx = indices[ i*3 + k];
+				normals[ vtxIdx] += n;
+				++vertCount[ vtxIdx];
+			}
+		}
+
+		for (int i=0; i < numVertices; ++i)
+		{
+			normals[ i] /= (float)vertCount[ i];
+			normals[ i].Normalize();
+		}
+	}
+
+
 	return true;
 }
 
@@ -298,6 +334,7 @@ void RenderVertices(HDC hdc, const vector<Vector3> &vertices, const Matrix44 &tm
 
 
 void RenderIndices(HDC hdc, const vector<Vector3> &vertices, const vector<int> &indices, 
+	vector<Vector3> &normals,
 	const Matrix44 &tm, const Matrix44 &vpv)
 {
 	Vector3 camDir = g_cameraLookat - g_cameraPos;
@@ -314,12 +351,8 @@ void RenderIndices(HDC hdc, const vector<Vector3> &vertices, const vector<int> &
 		p3 = p3 * tm;
 
 		// culling
-		Vector3 v1 = p2 - p1;
-		Vector3 v2 = p3 - p1;
-		v1.Normalize();
-		v2.Normalize();
-		Vector3 n = v1.CrossProduct(v2);
-		n.Normalize();
+		Vector3 n = normals[ indices[ i]];
+		n = n.MultiplyNormal(tm);
 		if (n.DotProduct(camDir) > 0)
 			continue;
 
@@ -350,7 +383,8 @@ void Paint(HWND hWnd, HDC hdc)
 	DeleteObject(hbrBkGnd);
 
 	Matrix44 vpv = g_matView * g_matProjection * g_matViewPort;
-	RenderIndices(hdcMem, g_vertices, g_indices, g_matLocal1 * g_matWorld1,  vpv);
+	RenderIndices(hdcMem, g_vertices, g_indices, g_normals, 
+		g_matLocal1 * g_matWorld1,  vpv);
 
 	BitBlt(hdc, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, hdcMem, 0, 0, SRCCOPY);
 	SelectObject(hdcMem, hbmOld);

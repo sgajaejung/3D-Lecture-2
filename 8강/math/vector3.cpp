@@ -141,14 +141,3 @@ Vector3 Vector3::CrossProduct( const Vector3& v ) const
 		(z * v.x) - (x * v.z), 
 		(x * v.y) - (y * v.x) );
 }
-
-
-Vector3 Vector3::MultiplyNormal( const Matrix44& rhs ) const
-{
-	Vector3 v;
-	v.x = x * rhs._11 + y * rhs._21 + z * rhs._31;
-	v.y = x * rhs._12 + y * rhs._22 + z * rhs._32;
-	v.z = x * rhs._13 + y * rhs._23 + z * rhs._33;
-	v.Normalize();
-	return v;
-}

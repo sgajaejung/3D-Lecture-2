@@ -17,7 +17,6 @@ struct Vector3
 	void Normalize();
 	float	DotProduct( const Vector3& v ) const;
 	Vector3 CrossProduct( const Vector3& v ) const;
-	Vector3 MultiplyNormal( const Matrix44& rhs ) const;
 	
 	Vector3 operator + () const;
 	Vector3 operator - () const;
