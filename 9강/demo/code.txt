@@ -1,0 +1,121 @@
+
+
+@@item Max Script ---------------------------------------
+
+
+@@item 1. WriteNormal 함수를 구현한다.
+fn WriteNormal obj = 
+(
+	varSetNormal = CollectNormals obj
+
+	format "FACE-NORMAL = %\n" varSetNormal.count to:Outfile
+	for i=1 to varSetNormal.count do
+	(
+		norm = (ConvertToD3D_POS varSetNormal[ i])
+		format "% % %\n" norm.x norm.y norm.z to:Outfile
+	)
+)
+
+
+@@item 2. CollectNormals 함수를 구현한다.
+fn CollectNormals obj = 
+(
+	varSetNormal = #()
+	for i=1 to obj.numfaces do
+	(
+		local normal = normalize (getFaceNormal obj i)
+		append varSetNormal normal
+	)
+	varSetNormal
+)
+
+
+@@item 3. WriteNormal 함수를 호출한다.
+			WriteNormal g_varSetMeshes[ i]
+
+
+@@item Normal Loading ---------------------------------------
+
+@@item 1. 노말벡터 버퍼를 선언한다.
+vector<Vector3> g_normals;
+
+
+@@item 2. 노말벡터를 읽는 함수를 선언한다.
+bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices, 
+	vector<Vector3> &normals);
+
+
+@@item 3. ReadModelFile 함수를 호출한다.
+ReadModelFile("../../media/model_normal.dat", g_vertices, g_indices, g_normals);
+
+
+
+@@item 4. 노말벡터를 읽는 코드 추가.
+	string norm;
+	int numNormal;
+	fin >> norm >> eq >> numNormal;
+
+	normals.resize(numVertices);
+
+	if (numNormal > 0)
+	{
+		float num1, num2, num3;
+		vector<int> vertCount(numVertices, 0);
+		for (int i = 0; i < numNormal; i++)
+		{
+			fin >> num1 >> num2 >> num3;
+			Vector3 n(num1, num2, num3);
+
+			// 법선벡터의 평균을 구해서 할당한다.
+			for (int k=0; k < 3; ++k)
+			{
+				const int vtxIdx = indices[ i*3 + k];
+				normals[ vtxIdx] += n;
+				++vertCount[ vtxIdx];
+			}
+		}
+
+		for (int i=0; i < numVertices; ++i)
+		{
+			normals[ i] /= (float)vertCount[ i];
+			normals[ i].Normalize();
+		}
+	}
+
+
+
+
+@@item 5. RenderIndices 에서 노말벡터를 입력받는다.
+void RenderIndices(HDC hdc, const vector<Vector3> &vertices, const vector<int> &indices, 
+	vector<Vector3> &normals,
+	const Matrix44 &tm, const Matrix44 &vpv)
+
+
+@@item 6. RenderIndices 에 노말벡터를 인자로 넣는다.
+	RenderIndices(hdcMem, g_vertices, g_indices, g_normals, 
+		g_matLocal1 * g_matWorld1,  vpv);
+
+
+@@item 7. Vector3 에 MultiplyNormal 함수를 추가한다.
+	Vector3 MultiplyNormal( const Matrix44& rhs ) const;
+
+
+@@item 8. Vector3 에 MultiplyNormal 함수를 추가한다.
+Vector3 Vector3::MultiplyNormal( const Matrix44& rhs ) const
+{
+	Vector3 v;
+	v.x = x * rhs._11 + y * rhs._21 + z * rhs._31;
+	v.y = x * rhs._12 + y * rhs._22 + z * rhs._32;
+	v.z = x * rhs._13 + y * rhs._23 + z * rhs._33;
+	v.Normalize();
+	return v;
+}
+
+
+@@item 9. 인자로 받은 노말벡터로 컬링을 한다.
+		Vector3 n = normals[ indices[ i]];
+		n = n.MultiplyNormal(tm);
+		if (n.DotProduct(camDir) > 0)
+			continue;
+
+
