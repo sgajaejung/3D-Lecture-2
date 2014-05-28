@@ -72,7 +72,11 @@ Color::Color(float r, float g, float b, float a) : R(r), G(g), B(b), A(a)
 
 Color Color::operator + (const Color &c) const
 {
-	return Color(R+c.R, G+c.G, B+c.B, A+c.A);
+	//return Color(R+c.R, G+c.G, B+c.B, A+c.A);
+	return Color(min(R+c.R, 255), 
+		min(G+c.G, 255), 
+		min(B+c.B, 255), 
+		min(A+c.A, 255));
 }
 
 Color Color::operator - (const Color &c) const
