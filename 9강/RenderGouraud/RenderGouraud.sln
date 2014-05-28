@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderGouraud", "RenderGouraud\RenderGouraud.vcxproj", "{4642F4BC-8F86-42A9-8B8E-8DD7B7CF4F7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4642F4BC-8F86-42A9-8B8E-8DD7B7CF4F7C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4642F4BC-8F86-42A9-8B8E-8DD7B7CF4F7C}.Debug|Win32.Build.0 = Debug|Win32
+		{4642F4BC-8F86-42A9-8B8E-8DD7B7CF4F7C}.Release|Win32.ActiveCfg = Release|Win32
+		{4642F4BC-8F86-42A9-8B8E-8DD7B7CF4F7C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
