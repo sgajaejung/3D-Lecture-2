@@ -328,8 +328,18 @@ void RenderIndices(HDC hdc, const vector<Vector3> &vertices, const vector<int> &
 		p3 = p3 * vpv;
 
 		Rasterizer::Color c0(0,0,255,1);
+		Rasterizer::Color lightColor(255,255,255,1);
+		Rasterizer::Color ambient(0,0,20,1);
+		
 		Vector3 lightDir(0,-1,0);
-		Rasterizer::Color color = c0 * max(0, n.DotProduct(-lightDir));
+		Rasterizer::Color diffuse = c0 * max(0, n.DotProduct(-lightDir));
+
+		Vector3 H = -lightDir + -camDir;
+		H.Normalize();
+		const float a2 = max(n.DotProduct(H), 0);
+		Rasterizer::Color specular = lightColor * pow(a2, 16);
+		Rasterizer::Color color = ambient + diffuse + specular;
+
 		Rasterizer::DrawTriangle(hdc, color, p1.x, p1.y, color, p2.x, p2.y, color, p3.x, p3.y);
 	}
 }
