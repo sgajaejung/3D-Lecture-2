@@ -19,11 +19,19 @@ vector<Vector3> g_normals;
 vector<int> g_indices;
 Matrix44 g_matWorld1;
 Matrix44 g_matLocal1;
+
+Matrix44 g_matWorld2;
+Matrix44 g_matLocal2;
+
 Matrix44 g_matView;
 Matrix44 g_matProjection;
 Matrix44 g_matViewPort;
 Vector3 g_cameraPos(0,1000,-1000);
 Vector3 g_cameraLookat(0,0,0);
+
+Box g_box1;
+Box g_box2;
+bool g_isCollision = false;
 
 
 // 콜백 프로시져 함수 프로토 타입
@@ -34,6 +42,8 @@ void	Render(HWND hWnd);
 void	Paint(HWND hWnd, HDC hdc);
 bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<int> &indices, 
 	vector<Vector3> &normals);
+void GetVerticesMinMax( const vector<Vector3> &vertices, OUT Vector3 &vMin, OUT Vector3 &vMax);
+
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, 
@@ -171,8 +181,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		case VK_DOWN:
 			{
 				Matrix44 mat;
-				mat.SetRotationX((wParam==VK_UP)? 0.1f : -0.1f);
-				g_matLocal1 *= mat;
+				mat.SetTranslate(Vector3(0, 0, (wParam==VK_UP)? 20.f : -20.f));
+				g_matWorld2  *= mat;
 			}
 			break;
 
@@ -180,8 +190,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		case VK_RIGHT:
 			{
 				Matrix44 mat;
-				mat.SetRotationY((wParam==VK_LEFT)? 0.1f : -0.1f);
-				g_matLocal1 *= mat;
+				mat.SetTranslate(Vector3((wParam==VK_LEFT)? -20.f : 20.f, 0, 0));
+				g_matWorld2  *= mat;
 			}
 			break;
 		}
@@ -196,9 +206,17 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 void Init()
 {
-	ReadModelFile("../../media/model_normal.dat", g_vertices, g_indices, g_normals);
+	ReadModelFile("../../media/cube_normal.dat", g_vertices, g_indices, g_normals);
 
-	g_matWorld1.SetTranslate(Vector3(0,0,0));
+	
+	Vector3 vMin, vMax;
+	GetVerticesMinMax(g_vertices, vMin, vMax);
+	g_box1.SetBox(vMin, vMax);
+	g_box2.SetBox(vMin, vMax);
+
+	g_matWorld1.SetTranslate(Vector3(-200,0,0));
+	g_matWorld2.SetTranslate(Vector3(200,0,0));
+
 
 	Vector3 dir = g_cameraLookat - g_cameraPos;
 	dir.Normalize();
@@ -218,9 +236,13 @@ void Init()
  */
 void	MainLoop(int elapse_time)
 {
-	Matrix44 mat;
-	mat.SetRotationY(elapse_time*0.0002f);
-	g_matLocal1 *= mat;
+	// collision Test
+	g_box1.SetWorldTM(g_matWorld1);
+	g_box1.Update();
+	g_box2.SetWorldTM(g_matWorld2);
+	g_box2.Update();
+	g_isCollision = g_box1.Collision(g_box2);
+
 
 	// Render
 	Render(g_hWnd);
@@ -318,6 +340,33 @@ bool ReadModelFile( const string &fileName, vector<Vector3> &vertices, vector<in
 }
 
 
+// vertices의 최대,최소 정점위치를 리턴한다.
+void GetVerticesMinMax( const vector<Vector3> &vertices, OUT Vector3 &vMin, OUT Vector3 &vMax)
+{
+	vMax = Vector3(FLT_MIN, FLT_MIN, FLT_MIN);
+	vMin = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
+
+	for (int i=0; i < (int)vertices.size(); ++i)
+	{
+		const Vector3 &v = vertices[i];
+
+		if (vMax.x < v.x)
+			vMax.x = v.x;
+		if (vMax.y < v.y)
+			vMax.y = v.y;
+		if (vMax.z < v.z)
+			vMax.z = v.z;
+
+		if (vMin.x > v.x)
+			vMin.x = v.x;
+		if (vMin.y > v.y)
+			vMin.y = v.y;
+		if (vMin.z > v.z)
+			vMin.z = v.z;
+	}
+}
+
+
 void RenderVertices(HDC hdc, const vector<Vector3> &vertices, const Matrix44 &tm)
 {
 	for (unsigned int i=0; i < vertices.size(); ++i)
@@ -328,6 +377,45 @@ void RenderVertices(HDC hdc, const vector<Vector3> &vertices, const Matrix44 &tm
 			MoveToEx(hdc, (int)p.x, (int)p.y, NULL);
 		else
 			LineTo(hdc, (int)p.x, (int)p.y);
+	}
+}
+
+
+void RenderIndicesWireFrame(HDC hdc, const vector<Vector3> &vertices, const vector<int> &indices, 
+	vector<Vector3> &normals,
+	const Matrix44 &tm, const Matrix44 &vpv)
+{
+	Vector3 camDir = g_cameraLookat - g_cameraPos;
+	camDir.Normalize();
+
+	for (unsigned int i=0; i < indices.size(); i+=3)
+	{
+		Vector3 p1 = vertices[ indices[ i]];
+		Vector3 p2 = vertices[ indices[ i+1]];
+		Vector3 p3 = vertices[ indices[ i+2]];
+
+		p1 = p1 * tm;
+		p2 = p2 * tm;
+		p3 = p3 * tm;
+
+		// culling
+		Vector3 n1 = normals[ indices[i]].MultiplyNormal( tm );
+		Vector3 n2 = normals[ indices[i+1]].MultiplyNormal( tm );
+		Vector3 n3 = normals[ indices[i+2]].MultiplyNormal( tm );
+		const float dot1 = n1.DotProduct(camDir);
+		const float dot2 = n2.DotProduct(camDir);
+		const float dot3 = n3.DotProduct(camDir);
+		if ((dot1 > 0) && (dot2 > 0) && (dot3 > 0))
+			continue;
+
+		p1 = p1 * vpv;
+		p2 = p2 * vpv;
+		p3 = p3 * vpv;
+
+		Rasterizer::Color color(0,0,255,1);
+		Rasterizer::DrawLine(hdc, color, p1.x, p1.y, color, p2.x, p2.y );
+		Rasterizer::DrawLine(hdc, color, p2.x, p2.y, color, p3.x, p3.y );
+		Rasterizer::DrawLine(hdc, color, p3.x, p3.y, color, p1.x, p1.y );
 	}
 }
 
@@ -410,12 +498,25 @@ void Paint(HWND hWnd, HDC hdc)
 	DeleteObject(hbrBkGnd);
 
 	Matrix44 vpv = g_matView * g_matProjection * g_matViewPort;
-	RenderIndices(hdcMem, g_vertices, g_indices, g_normals, 
-		g_matLocal1 * g_matWorld1,  vpv);
+
+	RenderIndicesWireFrame(hdcMem, g_vertices, g_indices, g_normals,
+		g_matLocal1 * g_matWorld1, vpv);
+	RenderVertices(hdcMem, g_box1.m_box, g_matLocal1 * g_matWorld1 * vpv);
+
+
+	RenderIndicesWireFrame(hdcMem, g_vertices, g_indices, g_normals,
+		g_matLocal2 * g_matWorld2, vpv);
+	RenderVertices(hdcMem, g_box1.m_box, g_matLocal2 * g_matWorld2 * vpv);
+
+
+	if (g_isCollision)
+	{
+		TextOutA(hdcMem, 10, 10, "Collision", 9);
+	}
+
 
 	BitBlt(hdc, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, hdcMem, 0, 0, SRCCOPY);
 	SelectObject(hdcMem, hbmOld);
 	DeleteObject(hbmMem);
 	DeleteDC(hdcMem);
 }
-
