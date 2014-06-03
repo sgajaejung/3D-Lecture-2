@@ -1,0 +1,138 @@
+
+
+@@item Cube 출력 --------------------------------------------
+
+
+@@item 1. 버텍스 버퍼 인덱스 버퍼 선언.
+LPDIRECT3DVERTEXBUFFER9 g_pVB = NULL; // 버텍스 버퍼
+LPDIRECT3DINDEXBUFFER9 g_pIB = NULL; // 인덱스 버퍼
+
+
+@@item 2. 버텍스 구조체 선언, 포맷 설정.
+// 버텍스 구조체
+struct Vertex
+{
+	Vertex() {}
+	Vertex(float x0, float y0, float z0) : x(x0), y(y0), z(z0) {}
+	float x, y, z;
+	static const DWORD FVF;
+};
+//버텍스 구조체 포맷.
+const DWORD Vertex::FVF  = D3DFVF_XYZ;
+
+
+@@item 3. 버텍스 버퍼, 인덱스 버퍼 제거.
+	if (g_pVB)
+		g_pVB->Release();
+	if (g_pIB)
+		g_pIB->Release();
+
+
+@@item 4. 버텍스 버퍼를 생성하고, 초기화 한다.
+	// 버텍스 버퍼 생성.
+	if (FAILED(g_pDevice->CreateVertexBuffer( 8 * sizeof(Vertex),
+		D3DUSAGE_WRITEONLY, Vertex::FVF,
+		D3DPOOL_MANAGED, &g_pVB, NULL)))
+	{
+		return false;
+	}
+
+
+	// 버텍스 버퍼 초기화.
+	Vertex* vertices;
+	if (FAILED(g_pVB->Lock( 0, sizeof(Vertex), (void**)&vertices, 0)))
+		return false;
+
+	vertices[ 0] = Vertex(-1, -1, -1);
+	vertices[ 1] = Vertex(-1, 1, -1);
+	vertices[ 2] = Vertex(1, 1, -1);
+	vertices[ 3] = Vertex(1, -1, -1);
+	vertices[ 4] = Vertex(-1, -1, 1);
+	vertices[ 5] = Vertex(-1, 1, 1);
+	vertices[ 6] = Vertex(1, 1, 1);
+	vertices[ 7] = Vertex(1, -1, 1);
+	g_pVB->Unlock();
+
+
+
+@@item 5. 인덱스 버퍼를 생성하고, 초기화 한다.
+	if (FAILED(g_pDevice->CreateIndexBuffer(36*sizeof(WORD), 
+		D3DUSAGE_WRITEONLY,
+		D3DFMT_INDEX16,
+		D3DPOOL_MANAGED,
+		&g_pIB, NULL)))
+	{
+		return false;
+	}
+
+	WORD *indices = NULL;
+	g_pIB->Lock(0, 0, (void**)&indices, 0);
+
+	int index = 0;
+	// front
+	indices[ index++] = 0; indices[ index++] = 1; indices[ index++] = 2;
+	indices[ index++] = 0; indices[ index++] = 2; indices[ index++] = 3;
+
+	// back
+	indices[ index++] = 4; indices[ index++] = 6; indices[ index++] = 5;
+	indices[ index++] = 4; indices[ index++] = 7; indices[ index++] = 6;
+
+	// left
+	indices[ index++] = 4; indices[ index++] = 5; indices[ index++] = 1;
+	indices[ index++] = 4; indices[ index++] = 1; indices[ index++] = 0;
+
+	// right
+	indices[ index++] = 3; indices[ index++] = 2; indices[ index++] = 6;
+	indices[ index++] = 3; indices[ index++] = 6; indices[ index++] = 7;
+
+	// top
+	indices[ index++] = 1; indices[ index++] = 5; indices[ index++] = 6;
+	indices[ index++] = 1; indices[ index++] = 6; indices[ index++] = 2;
+
+	// bottom
+	indices[ index++] = 4; indices[ index++] = 0; indices[ index++] = 3;
+	indices[ index++] = 4; indices[ index++] = 3; indices[ index++] = 7;
+	g_pIB->Unlock();
+
+
+@@item 6. 뷰 행렬을 설정한다.
+	D3DXVECTOR3 position(0,0,-5);
+	D3DXVECTOR3 target(0,0,0);
+	D3DXVECTOR3 up(0,1,0);
+	D3DXMATRIX V;
+	D3DXMatrixLookAtLH(&V, &position, &target, &up);
+	g_pDevice->SetTransform(D3DTS_VIEW, &V);
+
+
+@@item 7. 투영 행렬을 설정한다.
+	D3DXMATRIX proj;
+	D3DXMatrixPerspectiveFovLH(&proj ,D3DX_PI * 0.5f, (float)WINSIZE_X / (float) WINSIZE_Y, 1.f, 1000.0f) ;
+	g_pDevice->SetTransform(D3DTS_PROJECTION, &proj) ;
+
+
+@@item 8. 렌더링 옵션을 설정한다.
+	g_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE );
+	g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
+
+@@item 9. 출력한다.
+		D3DXMATRIX Rx, Ry;
+		D3DXMatrixRotationX(&Rx, 3.14f / 4.0f) ; // x축으로 45도 회전시킨다.
+		static float y = 0;
+		D3DXMatrixRotationY(&Ry, y); 
+		y += timeDelta / 1000.f; // 각 프례임당 y 회전을 중가시킨다.
+		if (y >= 6.28f) // 각도가 2*PI 에 이르면 0으로 초기화한다.
+			y = 0;
+
+		Matrix44 rx, ry, r;
+		rx.SetRotationX(MATH_PI/4.f);
+		ry.SetRotationY(y);
+		r = rx * ry;
+		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&r);
+
+		g_pDevice->SetStreamSource( 0, g_pVB, 0, sizeof(Vertex) );
+		g_pDevice->SetIndices(g_pIB);
+		g_pDevice->SetFVF( Vertex::FVF );
+		g_pDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12);
+
+
