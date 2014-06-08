@@ -26,7 +26,6 @@ struct sGlobal : public memmonitor::Monitor<sGlobal, TYPE_NAME(sGlobal)>
 	LPDIRECT3DINDEXBUFFER9 ib; // 인덱스 버퍼
 	int vtxSize;
 	int faceSize;
-	D3DMATERIAL9 mtrl;
 };
 sGlobal *global;
 
@@ -167,7 +166,14 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE)
 			::DestroyWindow(hWnd);
-		break;
+		else if (wParam == VK_TAB)
+		{
+			static bool flag = false;
+			g_pDevice->SetRenderState(D3DRS_CULLMODE, flag? D3DCULL_CCW : D3DCULL_NONE);
+			g_pDevice->SetRenderState(D3DRS_FILLMODE, flag? D3DFILL_SOLID : D3DFILL_WIREFRAME);
+			flag = !flag;
+		}
+		break;	
 	case WM_DESTROY: //윈도우가 파괴된다면..
 		PostQuitMessage(0);	//프로그램 종료 요청 ( 메시지 루프를 빠져나가게 된다 )
 		break;
@@ -238,7 +244,6 @@ bool InitDirectX(HWND hWnd)
 		return false;
 	}
 
-
 	//디바이스 생성 성공
 	d3d9->Release(); // Deivce 를 만들었으니 넌 더이상 필요없다 ( 사라져라! )
 	d3d9 = NULL;
@@ -274,7 +279,6 @@ void Render(int timeDelta)
 		r = rx*ry;
 		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&r);
 
-		g_pDevice->SetMaterial(&global->mtrl);
 		g_pDevice->SetStreamSource( 0, global->vb, 0, sizeof(Vertex) );
 		g_pDevice->SetIndices(global->ib);
 		g_pDevice->SetFVF( Vertex::FVF );
@@ -292,15 +296,8 @@ bool InitVertexBuffer()
 {
 	ReadModelFile("../../media/vase.dat", global->vb, global->vtxSize, global->ib, global->faceSize);
 
-	ZeroMemory(&global->mtrl, sizeof(global->mtrl));
-	global->mtrl.Ambient = D3DXCOLOR(1,0,0,1);
-	global->mtrl.Diffuse = D3DXCOLOR(1,0,0,1);
-	global->mtrl.Specular = D3DXCOLOR(1,0,0,1);
-	global->mtrl.Emissive = D3DXCOLOR(0,0,0,1);
-	global->mtrl.Power = 0.f;
-
 	Matrix44 V;
-	Vector3 dir = Vector3(0,0,0)-Vector3(0,0,-5);
+	Vector3 dir = Vector3(0,0,0)-Vector3(0,0,-500);
 	dir.Normalize();
 	V.SetView(Vector3(0,0,-500), dir, Vector3(0,1,0));
 	g_pDevice->SetTransform(D3DTS_VIEW, (D3DXMATRIX*)&V);
@@ -309,8 +306,6 @@ bool InitVertexBuffer()
 	proj.SetProjection(D3DX_PI * 0.5f, (float)WINSIZE_X / (float) WINSIZE_Y, 1.f, 1000.0f) ;
 	g_pDevice->SetTransform(D3DTS_PROJECTION, (D3DXMATRIX*)&proj) ;
 
-	//	g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	//	g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
 	g_pDevice->LightEnable (
 		0, // 활성화/ 비활성화 하려는 광원 리스트 내의 요소
 		true); // true = 활성화 ， false = 비활성화

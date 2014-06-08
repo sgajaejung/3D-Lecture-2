@@ -1,0 +1,22 @@
+
+
+@@item 재질 설정 --------------------------------------------
+
+
+@@item 1. 재질 선언
+	D3DMATERIAL9 mtrl;
+
+
+@@item 2. 재질 초기화.
+	ZeroMemory(&global->mtrl, sizeof(global->mtrl));
+	global->mtrl.Ambient = D3DXCOLOR(1,0,0,1);
+	global->mtrl.Diffuse = D3DXCOLOR(1,0,0,1);
+	global->mtrl.Specular = D3DXCOLOR(1,0,0,1);
+	global->mtrl.Emissive = D3DXCOLOR(0,0,0,1);
+	global->mtrl.Power = 0.f;
+
+
+@@item 3. 재질 설정.
+		g_pDevice->SetMaterial(&global->mtrl);
+
+
