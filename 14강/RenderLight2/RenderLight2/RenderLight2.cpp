@@ -22,11 +22,11 @@ const int WINPOS_Y = 0; //초기 윈도우 시작 위치 Y
 DECLARE_TYPE_NAME(sGlobal)
 struct sGlobal : public memmonitor::Monitor<sGlobal, TYPE_NAME(sGlobal)>
 {
-	LPDIRECT3DVERTEXBUFFER9 g_pVB; // 버텍스 버퍼
-	LPDIRECT3DINDEXBUFFER9 g_pIB; // 인덱스 버퍼
-	int g_VtxSize;
-	int g_FaceSize;
-	D3DMATERIAL9 g_Mtrl;
+	LPDIRECT3DVERTEXBUFFER9 vb; // 버텍스 버퍼
+	LPDIRECT3DINDEXBUFFER9 ib; // 인덱스 버퍼
+	int vtxSize;
+	int faceSize;
+	D3DMATERIAL9 mtrl;
 };
 sGlobal *global;
 
@@ -147,10 +147,10 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
 	if (g_pDevice)
 		g_pDevice->Release();
-	if (global->g_pVB)
-		global->g_pVB->Release();
-	if (global->g_pIB)
-		global->g_pIB->Release();
+	if (global->vb)
+		global->vb->Release();
+	if (global->ib)
+		global->ib->Release();
 	delete global;
 	memmonitor::Cleanup();
 	return 0;
@@ -274,11 +274,11 @@ void Render(int timeDelta)
 		r = rx*ry;
 		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&r);
 
-		g_pDevice->SetMaterial(&global->g_Mtrl);
-		g_pDevice->SetStreamSource( 0, global->g_pVB, 0, sizeof(Vertex) );
-		g_pDevice->SetIndices(global->g_pIB);
+		g_pDevice->SetMaterial(&global->mtrl);
+		g_pDevice->SetStreamSource( 0, global->vb, 0, sizeof(Vertex) );
+		g_pDevice->SetIndices(global->ib);
 		g_pDevice->SetFVF( Vertex::FVF );
-		g_pDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, global->g_VtxSize, 0, global->g_FaceSize);
+		g_pDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, global->vtxSize, 0, global->faceSize);
 
 		//랜더링 끝
 		g_pDevice->EndScene();
@@ -290,14 +290,14 @@ void Render(int timeDelta)
 
 bool InitVertexBuffer()
 {
-	ReadModelFile("../../media/vase.dat", global->g_pVB, global->g_VtxSize, global->g_pIB, global->g_FaceSize);
+	ReadModelFile("../../media/vase.dat", global->vb, global->vtxSize, global->ib, global->faceSize);
 
-	ZeroMemory(&global->g_Mtrl, sizeof(global->g_Mtrl));
-	global->g_Mtrl.Ambient = D3DXCOLOR(1,0,0,1);
-	global->g_Mtrl.Diffuse = D3DXCOLOR(1,0,0,1);
-	global->g_Mtrl.Specular = D3DXCOLOR(1,0,0,1);
-	global->g_Mtrl.Emissive = D3DXCOLOR(0,0,0,1);
-	global->g_Mtrl.Power = 0.f;
+	ZeroMemory(&global->mtrl, sizeof(global->mtrl));
+	global->mtrl.Ambient = D3DXCOLOR(1,0,0,1);
+	global->mtrl.Diffuse = D3DXCOLOR(1,0,0,1);
+	global->mtrl.Specular = D3DXCOLOR(1,0,0,1);
+	global->mtrl.Emissive = D3DXCOLOR(0,0,0,1);
+	global->mtrl.Power = 0.f;
 
 	Matrix44 V;
 	Vector3 dir = Vector3(0,0,0)-Vector3(0,0,-5);
