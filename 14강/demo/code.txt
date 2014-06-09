@@ -20,3 +20,52 @@
 		g_pDevice->SetMaterial(&global->mtrl);
 
 
+@@item ±¤¿ø ¼³Á¤ --------------------------------------------
+
+@@item 1. ±¤¿ø ¼±¾ð
+	D3DLIGHT9 light;
+
+
+@@item 2. ±¤¿ø ¼³Á¤
+		else if (VK_SPACE == wParam)
+		{
+			static bool flag = false;
+			g_pDevice->SetLight(0, &global->light); // ±¤¿ø ¼³Á¤.
+			g_pDevice->LightEnable(0, flag);
+			flag = !flag;
+		}
+
+
+@@item 3. ±¤¿ø ÃÊ±âÈ­.
+	D3DXCOLOR color(1,1,1,1);
+	ZeroMemory(&global->light, sizeof(global->light));
+	global->light.Type = D3DLIGHT_DIRECTIONAL;
+	global->light.Ambient = color * 0.4f;
+	global->light.Diffuse = color;
+	global->light.Specular = color * 0.6f;
+	global->light.Direction = *(D3DXVECTOR3*)&Vector3(1,0,0);
+
+
+@@item 4. ±¤¿ø ¼³Á¤.
+	g_pDevice->SetLight(0, &global->light); // ±¤¿ø ¼³Á¤.
+
+
+
+@@item ±¤¿ø È¸Àü --------------------------------------------
+
+
+@@item 1. ±¤¿ø ¹æÇâ º¯¼ö ¼±¾ð.
+	Vector3 lightDir;
+
+
+@@item 2. ±¤¿ø ¹æÇâ ÃÊ±âÈ­.
+	global->lightDir = Vector3(0,0,1);
+
+
+@@item 3. ±¤¿ø È¸Àü
+		Matrix44 rry;
+		rry.SetRotationY(-y); // yÃàÀ¸·Î È¸Àü
+		Vector3 dir = global->lightDir * rry;
+		global->light.Direction = *(D3DXVECTOR3*)&dir;
+		g_pDevice->SetLight(0, &global->light); // ±¤¿ø ¼³Á¤.
+
