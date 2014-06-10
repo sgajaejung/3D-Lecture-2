@@ -263,7 +263,7 @@ bool InitVertexBuffer()
 	g_pDevice->SetLight(0, &global->light); // ±¤¿ø ¼³Á¤.
 	g_pDevice->LightEnable(0, true);
 
-	//g_pDevice->SetRenderState(D3DRS_SPECULARENABLE, true);
+	g_pDevice->SetRenderState(D3DRS_SPECULARENABLE, true);
 	g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true) ;
 
 	return true;
