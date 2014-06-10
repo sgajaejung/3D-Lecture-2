@@ -3,5 +3,39 @@
 @@item 메모리 모니터 설정  --------------------------------------------
 
 
+@@item 1. wxMemMonitorLib 프로젝트를 추가한다.
+
+
+@@item 2. mem monitor 를 포함시킨다.
+#include "../../wxMemMonitorLib/wxMemMonitor.h"
+
+
+@@item 3. wxWidgets 을 초기화하는 매크로를 추가한다.
+MEMORYMONITOR_INNER_PROCESS();
+
+
+@@item 4. mem monitor 를 초기화 한다.
+	if (!memmonitor::Init(memmonitor::INNER_PROCESS,hInstance,"config_memmonitor.json" ))
+	{
+		MessageBoxA(NULL, memmonitor::GetLastError().c_str(), "ERROR", MB_OK);
+	}
+
+
+@@item 5. mem monitor 를 제거한다.
+	memmonitor::Cleanup();
+
+
+@@item 6. 컴파일 해보자.
+
+
+@@item 7. 속성페이지에서, 공용속성 -> 프레임워크 및 참조 -> 새 참조 추가 -> wxMemMonitorLib 를 추가한다.
+
+
+@@item 8. 모니터 하고 싶은 객체를 등록한다.
+DECLARE_TYPE_NAME(sGlobal)
+ : public memmonitor::Monitor<sGlobal, TYPE_NAME(sGlobal)>
+
+
+@@item 9. AutoExp 추가하기.
 
 

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Target", "Target\Target.vcxproj", "{DC9531AA-3C57-4358-AE76-74B7F0F8F0CD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxMemMonitorLib", "..\wxMemMonitorLib\compiler\vc10win32\wxMemMonitorLib.vcxproj", "{937B4BDB-2BC4-43DE-9E32-BA36AEE888EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC9531AA-3C57-4358-AE76-74B7F0F8F0CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC9531AA-3C57-4358-AE76-74B7F0F8F0CD}.Debug|Win32.Build.0 = Debug|Win32
+		{DC9531AA-3C57-4358-AE76-74B7F0F8F0CD}.Release|Win32.ActiveCfg = Release|Win32
+		{DC9531AA-3C57-4358-AE76-74B7F0F8F0CD}.Release|Win32.Build.0 = Release|Win32
+		{937B4BDB-2BC4-43DE-9E32-BA36AEE888EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{937B4BDB-2BC4-43DE-9E32-BA36AEE888EB}.Debug|Win32.Build.0 = Debug|Win32
+		{937B4BDB-2BC4-43DE-9E32-BA36AEE888EB}.Release|Win32.ActiveCfg = Release|Win32
+		{937B4BDB-2BC4-43DE-9E32-BA36AEE888EB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
