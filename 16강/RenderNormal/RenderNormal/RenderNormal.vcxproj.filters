@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="RenderNormal.cpp" />
+    <ClCompile Include="..\..\math\box.cpp">
+      <Filter>mat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\matrix44.cpp">
+      <Filter>mat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\vector3.cpp">
+      <Filter>mat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\vector4.cpp">
+      <Filter>mat</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="mat">
+      <UniqueIdentifier>{a1265e98-eece-4adc-82d7-2635f97a2833}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\math\box.h">
+      <Filter>mat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\Math.h">
+      <Filter>mat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\matrix44.h">
+      <Filter>mat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\vector3.h">
+      <Filter>mat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\vector4.h">
+      <Filter>mat</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
