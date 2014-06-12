@@ -73,10 +73,10 @@ fn CollectVertex obj =
 fn CollectNormals obj = 
 (
 	varSetNormal = #()
-	for i=1 to obj.numverts do
+	for i=1 to obj.numfaces do
 	(
-		v = getnormal obj i
-		append varSetNormal v
+		local normal = normalize (getFaceNormal obj i)
+		append varSetNormal normal
 	)
 	varSetNormal
 )
@@ -92,65 +92,6 @@ fn CollectIndex obj =
 	)
 	varSetIndex
 )
-
-
-
-fn CollectVtxNormTex obj = 
-(
-	varSetVtxNormTex = #()
-
-	print obj.name
-	print (classof obj)
-	print "vertex count: " 
-	print obj.numverts
-	print "texture vertex count: " 
-	print obj.numtverts
-	print "vertex face count: "
-	print obj.faces.count
-
-	if (obj.numTVerts > obj.numVerts) then
-	(
-		print "obj.numTVerts > obj.numVerts"
-		
-		for i=1 to obj.numTVerts do
-		--for i=1 to obj.numVerts do
-		(
-			local vnt = VtxNormTex #()
-			vnt.tex = getTvert obj i
-			append varSetVtxNormTex vnt
-		)
-
-		for i=1 to obj.faces.count do
-		(
-			local tvfaceidx = getTVFace obj i
-			local faceidx = getFace obj i
-
-			varSetVtxNormTex[ faceidx[ 1]].vtx = copy (getvert obj faceidx[ 1])
-			varSetVtxNormTex[ faceidx[ 2]].vtx = copy (getvert obj faceidx[ 2])
-			varSetVtxNormTex[ faceidx[ 3]].vtx = copy (getvert obj faceidx[ 3])
-
-			
-			local normal = normalize (getFaceNormal obj i)
-			varSetVtxNormTex[ faceidx[ 1]].nrm = normal
-			varSetVtxNormTex[ faceidx[ 2]].nrm = normal
-			varSetVtxNormTex[ faceidx[ 3]].nrm = normal
-		)
-	)
-	else
-	(
-		for i=1 to obj.numverts do
-		(
-			local vnt = VtxNormTex #()
-			vnt.vtx = getvert obj i
-			vnt.nrm = getnormal obj i
-			vnt.tex = getTVert obj i
-			append varSetVtxNormTex vnt
-		)
-	)
-
-	varSetVtxNormTex
-)
-
 
 
 fn WriteVertex obj = 
@@ -170,7 +111,7 @@ fn WriteNormal obj =
 (
 	varSetNormal = CollectNormals obj
 
-	format "NORMAL = %\n" varSetNormal.count to:Outfile
+	format "FACE-NORMAL = %\n" varSetNormal.count to:Outfile
 	for i=1 to varSetNormal.count do
 	(
 		norm = (ConvertToD3D_POS varSetNormal[ i])
@@ -191,39 +132,33 @@ fn WriteIndex obj =
 	)
 )
 
-fn WriteVtxNormTex obj = 
+
+fn WriteTVertTVFace obj = 
 (
-	varSetVertice = CollectVtxNormTex obj
-	
-	format "VERTEX = %\n" varSetVertice.count to:Outfile
-	for i=1 to varSetVertice.count do
+	format "TEXTURE-VERTEX = %\n" obj.numTVerts to:Outfile
+	for i=1 to obj.numTVerts do
 	(
-		vtx = (ConvertToD3D_POS varSetVertice[ i].vtx)
-		format "% % %\n" vtx.x vtx.y vtx.z to:Outfile
-	)
-
-	format "NORMAL = %\n" varSetVertice.count to:Outfile
-	for i=1 to varSetVertice.count do
-	(
-		nrm = (ConvertToD3D_POS varSetVertice[ i].nrm)
-		format "% % %\n" nrm.x nrm.y nrm.z to:Outfile
-	)
-	
-	format "TEX = %\n" varSetVertice.count to:Outfile
-	for i=1 to varSetVertice.count do
-	(
-		uv = (ConvertToD3D_UV varSetVertice[ i].tex)
+		local tex = getTvert obj i
+		local uv = (ConvertToD3D_UV tex)
 		format "% %\n" uv.x  uv.y to:Outfile
-	)	
-
-	format "INDEX = %\n"  obj.faces.count to:Outfile
+	)
+		
+	format "TEXTURE-FACE = %\n" obj.faces.count to:Outfile	
 	for i=1 to obj.faces.count do
 	(
 		local tvfaceidx = getTVFace obj i
-		--local tvfaceidx = getFace obj i
-		index = (ConvertToD3D_INDEX tvfaceidx)
+		local index = (ConvertToD3D_INDEX tvfaceidx)
 		format "% % %\n" (index.x as integer) (index.y as integer) (index.z as integer) to:Outfile
-	)
+	)	
+)
+
+
+fn WriteVtxNormTex obj = 
+(
+	WriteVertex obj
+	WriteIndex obj
+	WriteNormal obj
+	WriteTVertTVFace obj
 )
 
 
@@ -269,7 +204,7 @@ rollout ui "≥»≥»" width:387 height:266
 	-- UI √¢¿Ã ø≠∏±∂ß 
 	on ui open do
 	(
-		editFilePath.text = "data.txt"
+		editFilePath.text = "data.dat"
 	)
 
 	-- DirectX Export
