@@ -30,6 +30,7 @@ struct sGlobal : public memmonitor::Monitor<sGlobal, TYPE_NAME(sGlobal)>
 	D3DMATERIAL9 mtrl;
 	D3DLIGHT9 light;
 	IDirect3DTexture9 *texture;
+	int addressMode;
 
 	// 법선 출력
 	LPDIRECT3DVERTEXBUFFER9 fnvb; // 면 법선 버퍼
@@ -146,6 +147,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	global = new sGlobal;
 	global->lButtonDown = false;
 	global->mode = sGlobal::RENDER_MESH;
+	global->addressMode = D3DTADDRESS_WRAP;
 
 	InitVertexBuffer();
 
@@ -401,6 +403,9 @@ void Render(int timeDelta)
 		g_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		g_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 		g_pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+		g_pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, global->addressMode) ;
+		g_pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, global->addressMode) ;
+
 		g_pDevice->SetMaterial(&global->mtrl);
 
 		g_pDevice->SetTexture(0, global->texture);
@@ -467,12 +472,12 @@ bool ReadModelFile( const string &fileName, LPDIRECT3DVERTEXBUFFER9 &vtxBuff, in
 
 	vertices[0].u = 0;
 	vertices[0].v = 0;
-	vertices[1].u = 1;
+	vertices[1].u = 2;
 	vertices[1].v = 0;
-	vertices[2].u = 1;
-	vertices[2].v = 1;
+	vertices[2].u = 2;
+	vertices[2].v = 2;
 	vertices[3].u = 0;
-	vertices[3].v = 1;
+	vertices[3].v = 2;
 
 	vtxBuff->Unlock();
 
