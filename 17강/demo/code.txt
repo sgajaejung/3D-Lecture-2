@@ -7,18 +7,35 @@
 	IDirect3DTexture9 *texture;
 
 
-@@item 2. 텍스쳐 객체 제거
+@@item 2. 버텍스 구조체에 텍스쳐 좌표 추가.
+	float u, v;
+
+
+@@item 3. FVF 설정 변경.
+	D3DFVF_TEX1
+
+
+@@item 4. 텍스쳐 객체 제거
 	if (global->texture)
 		global->texture->Release();
 
 
-
-@@item 3. 텍스쳐 객체 생성.
+@@item 5. 텍스쳐 객체 생성.
 	D3DXCreateTextureFromFileA(g_pDevice, "../../media/강소라2.jpg", &global->texture);
 
 
 
-@@item 4. 렌더러에 텍스처 바인딩.
+@@item 6. 렌더러에 텍스처 바인딩.
 		g_pDevice->SetTexture(0, global->texture);
 
+
+@@item 7. 텍스쳐 UV 좌표 설정.
+	vertices[0].u = 0;
+	vertices[0].v = 0;
+	vertices[1].u = 1;
+	vertices[1].v = 0;
+	vertices[2].u = 1;
+	vertices[2].v = 1;
+	vertices[3].u = 0;
+	vertices[3].v = 1;
 

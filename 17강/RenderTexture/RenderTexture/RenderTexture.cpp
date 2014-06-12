@@ -59,11 +59,10 @@ struct Vertex
 	Vertex(float x0, float y0, float z0) : p(Vector3(x0, y0, z0)), n(Vector3(0,0,0)) {}
 	Vector3 p;
 	Vector3 n;
-	float u, v;
 	static const DWORD FVF;
 };
 //버텍스 구조체 포맷.
-const DWORD Vertex::FVF  = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
+const DWORD Vertex::FVF  = D3DFVF_XYZ | D3DFVF_NORMAL;
 
 
 
@@ -455,16 +454,7 @@ bool ReadModelFile( const string &fileName, LPDIRECT3DVERTEXBUFFER9 &vtxBuff, in
 		fin >> num1 >> num2 >> num3;
 		vertices[i] = Vertex(num1, num2, num3);
 	}
-
-	vertices[0].u = 0;
-	vertices[0].v = 0;
-	vertices[1].u = 1;
-	vertices[1].v = 0;
-	vertices[2].u = 1;
-	vertices[2].v = 1;
-	vertices[3].u = 0;
-	vertices[3].v = 1;
-
+	
 	vtxBuff->Unlock();
 
 
