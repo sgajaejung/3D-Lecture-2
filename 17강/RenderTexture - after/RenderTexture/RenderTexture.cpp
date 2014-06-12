@@ -288,9 +288,9 @@ bool InitVertexBuffer()
 
 
 	Matrix44 V;
-	Vector3 dir = Vector3(0,0,0)-Vector3(0,0,-500);
+	Vector3 dir = Vector3(0,0,0)-Vector3(0,0,-300);
 	dir.Normalize();
-	V.SetView(Vector3(0,0,-500), dir, Vector3(0,1,0));
+	V.SetView(Vector3(0,0,-300), dir, Vector3(0,1,0));
 	g_pDevice->SetTransform(D3DTS_VIEW, (D3DXMATRIX*)&V);
 
 	Matrix44 proj;
