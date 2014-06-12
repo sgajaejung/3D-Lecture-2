@@ -26,6 +26,9 @@
 
 
 @@item 6. 렌더러에 텍스처 바인딩.
+		g_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		g_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		g_pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		g_pDevice->SetTexture(0, global->texture);
 
 

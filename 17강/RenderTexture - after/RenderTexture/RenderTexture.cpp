@@ -398,7 +398,11 @@ void Render(int timeDelta)
 
 		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&global->localTm);
 
+		g_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		g_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		g_pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		g_pDevice->SetMaterial(&global->mtrl);
+
 		g_pDevice->SetTexture(0, global->texture);
 		g_pDevice->SetStreamSource( 0, global->vb, 0, sizeof(Vertex) );
 		g_pDevice->SetIndices(global->ib);
