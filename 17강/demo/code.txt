@@ -1,0 +1,24 @@
+
+
+@@item 텍스쳐 출력  --------------------------------------------
+
+
+@@item 1. 텍스쳐 객체 선언.
+	IDirect3DTexture9 *texture;
+
+
+@@item 2. 텍스쳐 객체 제거
+	if (global->texture)
+		global->texture->Release();
+
+
+
+@@item 3. 텍스쳐 객체 생성.
+	D3DXCreateTextureFromFileA(g_pDevice, "../../media/강소라2.jpg", &global->texture);
+
+
+
+@@item 4. 렌더러에 텍스처 바인딩.
+		g_pDevice->SetTexture(0, global->texture);
+
+
