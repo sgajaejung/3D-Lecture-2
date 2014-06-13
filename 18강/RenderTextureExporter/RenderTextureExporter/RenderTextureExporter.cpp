@@ -268,7 +268,7 @@ bool InitDirectX(HWND hWnd)
 
 bool InitVertexBuffer()
 {
-	ReadModelFile("../../media/teapot.dat", global->vb, global->vtxSize, global->ib, global->faceSize);
+	ReadModelFile("../../media/data2.dat", global->vb, global->vtxSize, global->ib, global->faceSize);
 	CreateFaceNormalLine(global->vb, global->vtxSize, global->ib, global->faceSize, global->fnvb, global->faceNormalVtxSize);
 	CreateVertexNormalLine(global->vb, global->vtxSize, global->ib, global->faceSize, global->vnvb, global->vertexNormalVtxSize);
 	D3DXCreateTextureFromFileA(g_pDevice, "../../media/°­¼Ò¶ó2.jpg", &global->texture);
