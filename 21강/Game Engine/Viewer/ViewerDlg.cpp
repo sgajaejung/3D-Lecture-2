@@ -6,51 +6,17 @@
 #include "Viewer.h"
 #include "ViewerDlg.h"
 #include "afxdialogex.h"
+#include "ModelView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
-
-class CAboutDlg : public CDialogEx
-{
-public:
-	CAboutDlg();
-
-// 대화 상자 데이터입니다.
-	enum { IDD = IDD_ABOUTBOX };
-
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
-// 구현입니다.
-protected:
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
-{
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
-
-
-// CViewerDlg 대화 상자
-
-
-
-
 CViewerDlg::CViewerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CViewerDlg::IDD, pParent)
-	, m_strOk(_T(""))
+,	m_bLoop(true)
+,	m_pModelView(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -58,14 +24,15 @@ CViewerDlg::CViewerDlg(CWnd* pParent /*=NULL*/)
 void CViewerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT_OK, m_strOk);
 }
 
 BEGIN_MESSAGE_MAP(CViewerDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON_OK, &CViewerDlg::OnBnClickedButtonOk)
+	ON_WM_LBUTTONDOWN()
+	ON_BN_CLICKED(IDOK, &CViewerDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDCANCEL, &CViewerDlg::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -100,7 +67,17 @@ BOOL CViewerDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
+	MoveWindow(0, 0, 800, 600 );
+
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	m_pModelView = new CModelView();
+	m_pModelView->Create(NULL, _T("CView"), WS_CHILDWINDOW, 
+		CRect(0,0, 500, 500), this, 0);
+	graphic::cRenderer::Get()->CreateDirectX(
+		m_pModelView->GetSafeHwnd(), 500, 500);
+
+	m_pModelView->ShowWindow(SW_SHOW);
+
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -109,8 +86,6 @@ void CViewerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
-		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
 	}
 	else
 	{
@@ -146,8 +121,6 @@ void CViewerDlg::OnPaint()
 		CDialogEx::OnPaint();
 	}
 
-
-
 }
 
 // 사용자가 최소화된 창을 끄는 동안에 커서가 표시되도록 시스템에서
@@ -157,10 +130,73 @@ HCURSOR CViewerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CViewerDlg::OnBnClickedButtonOk()
-{
-	m_strOk = "kdjfksdfjslkjf";
-	UpdateData(FALSE);
-	//AfxMessageBox(m_strOk);
 
+LRESULT CViewerDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	switch (message)
+	{
+	case WM_LBUTTONDOWN:
+		{
+			int a = 0;
+		}
+		break;
+	}
+
+	return CDialogEx::WindowProc(message, wParam, lParam);
+}
+
+
+BOOL CViewerDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CViewerDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CString str;
+	ClientToScreen(&point);
+	str.Format(L"%d, %d", point.x, point.y);
+	//	AfxMessageBox(str);	
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+
+void CViewerDlg::MainProc()
+{
+	while( m_bLoop )
+	{
+		MSG msg;
+		if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+		{
+			if(!GetMessage(&msg, NULL, 0, 0)) 
+			{
+				break;
+			}
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+
+		if (m_pModelView)
+			m_pModelView->Render();
+
+		Sleep(0);
+	}
+}
+
+void CViewerDlg::OnBnClickedOk()
+{
+	m_bLoop = false;
+	CDialogEx::OnOK();
+}
+
+
+void CViewerDlg::OnBnClickedCancel()
+{
+	m_bLoop = false;
+	CDialogEx::OnCancel();
 }

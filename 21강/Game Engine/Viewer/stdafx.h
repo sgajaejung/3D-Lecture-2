@@ -56,3 +56,6 @@
 #endif
 
 
+#include "../Common/common.h"
+#include "../Graphic/graphic.h"
+using namespace common;
