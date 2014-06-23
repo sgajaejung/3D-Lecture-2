@@ -7,7 +7,8 @@
 
 
 // CModelView
-CModelView::CModelView()
+CModelView::CModelView() : 
+	m_RButtonDown(false)
 {
 
 }
@@ -18,6 +19,9 @@ CModelView::~CModelView()
 
 BEGIN_MESSAGE_MAP(CModelView, CView)
 	ON_WM_MOUSEMOVE()
+	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -52,14 +56,6 @@ void CModelView::Dump(CDumpContext& dc) const
 // CModelView 메시지 처리기입니다.
 
 
-void CModelView::OnMouseMove(UINT nFlags, CPoint point)
-{
-	m_mousePos = point;	
-	Invalidate();
-	CView::OnMouseMove(nFlags, point);
-}
-
-
 void CModelView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
@@ -83,9 +79,88 @@ void CModelView::Render()
 		//화면 청소가 성공적으로 이루어 졌다면... 랜더링 시작
 		graphic::GetDevice()->BeginScene();
 
+		graphic::GetRenderer()->RenderAxis();
+		graphic::GetRenderer()->RenderGrid();
+
+
 		//랜더링 끝
 		graphic::GetDevice()->EndScene();
 		//랜더링이 끝났으면 랜더링된 내용 화면으로 전송
 		graphic::GetDevice()->Present( NULL, NULL, NULL, NULL );
 	}
+}
+
+
+void CModelView::Init()
+{
+	m_camPos = Vector3(100,100,-500);
+	m_lookAtPos = Vector3(0,0,0);
+	UpdateCamera();
+
+	const int WINSIZE_X = 1024;		//초기 윈도우 가로 크기
+	const int WINSIZE_Y = 768;	//초기 윈도우 세로 크기
+	Matrix44 proj;
+	proj.SetProjection(D3DX_PI / 4.f, (float)WINSIZE_X / (float) WINSIZE_Y, 1.f, 1000.0f) ;
+	graphic::GetDevice()->SetTransform(D3DTS_PROJECTION, (D3DXMATRIX*)&proj) ;
+
+	graphic::GetDevice()->LightEnable (
+		0, // 활성화/ 비활성화 하려는 광원 리스트 내의 요소
+		true); // true = 활성화 ， false = 비활성화
+}
+
+void CModelView::UpdateCamera()
+{
+	Matrix44 V;
+	Vector3 dir = m_lookAtPos - m_camPos;
+	dir.Normalize();
+	V.SetView(m_camPos, dir, Vector3(0,1,0));
+	graphic::GetDevice()->SetTransform(D3DTS_VIEW, (D3DXMATRIX*)&V);
+}
+
+void CModelView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	m_RButtonDown = true;
+	m_curPos = point;
+	CView::OnRButtonDown(nFlags, point);
+}
+
+
+void CModelView::OnRButtonUp(UINT nFlags, CPoint point)
+{
+	m_RButtonDown = false;
+	CView::OnRButtonUp(nFlags, point);
+}
+
+void CModelView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	if (m_RButtonDown)
+	{		
+		CPoint pos = point - m_curPos;
+		m_curPos = point;
+
+		Matrix44 rx;
+		rx.SetRotationY( pos.x * 0.005f );
+
+		Matrix44 ry;
+		ry.SetRotationX( pos.y * 0.005f );
+
+		Matrix44 m = rx * ry;
+		m_camPos *= m;
+
+		UpdateCamera();
+	}	
+
+	CView::OnMouseMove(nFlags, point);
+}
+
+
+BOOL CModelView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	Vector3 dir = m_lookAtPos - m_camPos;
+	dir.Normalize();
+
+	m_camPos += (zDelta < 0)? dir * -50 : dir*50;
+	UpdateCamera();
+
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }

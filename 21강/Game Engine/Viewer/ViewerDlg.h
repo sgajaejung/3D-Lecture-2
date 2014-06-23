@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "afxcmn.h"
 
 class CModelView;
 // CViewerDlg 대화 상자
@@ -40,4 +41,7 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
+	CListCtrl m_FileList;
+	afx_msg void OnItemchangedFileList(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnDropFiles(HDROP hDropInfo);
 };

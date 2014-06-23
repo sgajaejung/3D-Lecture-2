@@ -2,6 +2,13 @@
 
 namespace graphic
 {
+	struct sVertexDiffuse
+	{
+		Vector3 p;
+		DWORD c;
+		enum {FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE};
+	};
+
 
 	class cRenderer : public common::cSingleton<cRenderer>
 	{
@@ -14,10 +21,31 @@ namespace graphic
 		LPDIRECT3DDEVICE9 GetDevice();
 		HWND GetHwnd() const;
 
+		void RenderAxis();
+		void RenderFPS();
+		void RenderGrid();
+
+
+	protected:
+		void MakeGrid( const float width, const int count, DWORD color, vector<sVertexDiffuse> &out );
+		void MakeAxis( const float length, DWORD xcolor, DWORD ycolor, DWORD zcolor, vector<sVertexDiffuse> &out );
+
 
 	private:
 		LPDIRECT3DDEVICE9 m_pDevice;		
 		HWND m_hWnd;
+
+		// Grid
+		vector<sVertexDiffuse> m_grid;
+
+		// Axis
+		vector<sVertexDiffuse> m_axis;
+
+		// Display FPS 
+		ID3DXFont *m_font;		
+		string m_fpsText;
+		float m_elapseTime;
+		int m_fps;
 	};
 
 
