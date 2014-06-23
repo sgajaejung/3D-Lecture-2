@@ -378,11 +378,10 @@ void Render(int timeDelta)
 		//화면 청소가 성공적으로 이루어 졌다면... 랜더링 시작
 		g_pDevice->BeginScene();
 
-
 		RECT rc;
 		SetRect( &rc, 150, 100, 0, 0 );
 		global->font->DrawTextA( NULL, 
-			"g_Font->DrawText", 
+			"global->font->DrawText", 
 			-1, 
 			&rc, 
 			DT_NOCLIP,
@@ -391,7 +390,8 @@ void Render(int timeDelta)
 
 		Matrix44 mat;
 		mat.SetTranslate(Vector3(-10, 0, -490));
-		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&mat);
+		Matrix44 m = global->localTm * mat;
+		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&m);
 		global->mesh3DText->DrawSubset( 0 );
 
 
