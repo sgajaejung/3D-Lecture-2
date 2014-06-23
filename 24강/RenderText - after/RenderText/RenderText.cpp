@@ -219,7 +219,7 @@ bool InitDirectX(HWND hWnd)
 	d3dpp.hDeviceWindow = hWnd;					//Device 가 출력될 윈도우 핸들
 	d3dpp.MultiSampleQuality = 0;						//멀티 샘플링 질
 	d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;		//멀티 샘플링 타입 
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;	//화면 전송 간격 ( 그냥 D3DPRESENT_INTERVAL_ONE 모니터 주사율과 동일시 )
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;	//화면 전송 간격 ( 그냥 D3DPRESENT_INTERVAL_ONE 모니터 주사율과 동일시 )
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	//화면 스왑 체인 방식
 	d3dpp.Windowed = true;						//윈도우 모드냐? ( 이게 false 면 풀스크린 된다! )
 
@@ -364,6 +364,17 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	return DefWindowProc( hWnd, msg, wParam, lParam );
 }
 
+std::string format(const char* fmt, ...)
+{
+	char textString[ 256] = {'\0'};
+	va_list args;
+	va_start ( args, fmt );
+	vsnprintf_s( textString, sizeof(textString), _TRUNCATE, fmt, args );
+	va_end ( args );
+	return textString;
+}
+
+
 
 //랜더
 void Render(int timeDelta)
@@ -382,7 +393,10 @@ void Render(int timeDelta)
 		g_pDevice->BeginScene();
 
 		//GetTickCount();
-		int t = timeGetTime();
+		//int t = timeGetTime();
+
+		string str = format("%f", 10.f);
+		const char *pp = str.c_str();
 
 
 		RECT rc;
@@ -394,13 +408,34 @@ void Render(int timeDelta)
 			DT_NOCLIP,
 			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f) );
 
+		
+		static int t = 0;
+		t += timeDelta;
+		const float ft = t / 1000.f;
+		Vector3 p0(5, sin(ft)*10, -490);
+		Vector3 p1(-10, 0, -490);
 
-		Matrix44 mat;
-		mat.SetTranslate(Vector3(-10, 0, -490));
-		Matrix44 m = global->localTm * mat;
-		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&m);
-		global->mesh3DText->DrawSubset( 0 );
+		{
+			Matrix44 mat;
+			mat.SetTranslate(p0);
+			Matrix44 m = global->localTm * mat;
+			g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&m);
+			global->mesh3DText->DrawSubset( 0 );
+		}
 
+		{
+			Vector3 v = p0 - p1;
+			v.Normalize();
+			Quaternion q;
+			q.SetRotationArc(Vector3(1,0,0), v);
+			Matrix44 qm = q.GetMatrix();
+
+			Matrix44 mat;
+			mat.SetTranslate(p1);
+			Matrix44 m = global->localTm * qm * mat;
+			g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&m);
+			global->mesh3DText->DrawSubset( 0 );
+		}
 
 		//랜더링 끝
 		g_pDevice->EndScene();
