@@ -26,6 +26,12 @@ protected:
 	CPoint m_curPos;
 
 
+	graphic::cLight m_Light;
+	graphic::cMaterial m_Mtrl;
+	LPD3DXMESH m_Mesh;
+	LPD3DXMESH m_CloneMesh;
+
+
 public:
 	virtual void OnDraw(CDC* pDC);      // 이 뷰를 그리기 위해 재정의되었습니다.
 #ifdef _DEBUG

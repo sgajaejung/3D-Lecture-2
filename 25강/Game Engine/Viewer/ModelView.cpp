@@ -15,6 +15,8 @@ CModelView::CModelView() :
 
 CModelView::~CModelView()
 {
+	SAFE_RELEASE(m_Mesh);
+	SAFE_RELEASE(m_CloneMesh);
 }
 
 BEGIN_MESSAGE_MAP(CModelView, CView)
@@ -29,10 +31,6 @@ END_MESSAGE_MAP()
 
 void CModelView::OnDraw(CDC* pDC)
 {
-//	CDocument* pDoc = GetDocument();
-//	CString str;
-//	str.Format(L"%d %d", m_mousePos.x, m_mousePos.y);
-//	pDC->TextOutW(10, 10, str);
 }
 
 
@@ -83,6 +81,10 @@ void CModelView::Render()
 		graphic::GetRenderer()->RenderAxis();
 
 
+		m_Mtrl.Bind();
+		m_Mesh->DrawSubset(0);
+
+
 		//랜더링 끝
 		graphic::GetDevice()->EndScene();
 		//랜더링이 끝났으면 랜더링된 내용 화면으로 전송
@@ -93,6 +95,71 @@ void CModelView::Render()
 
 void CModelView::Init()
 {
+	D3DXCreateBox(graphic::GetDevice(), 200, 200, 200, &m_Mesh, NULL);
+	//D3DXCreateSphere(g_pDevice, 100, 10, 10, &m_Mesh, NULL);
+	//D3DXCreateCylinder(g_pDevice, 100, 150, 200, 10, 10, &m_Mesh, NULL);
+	//D3DXCreateTeapot(g_pDevice, &m_Mesh, NULL);
+	//D3DXCreatePolygon(g_pDevice, 100, 20, &m_Mesh, NULL);
+	//D3DXCreateTorus(g_pDevice, 50, 100, 20, 10, &m_Mesh, NULL);
+
+
+
+	LPDIRECT3DVERTEXBUFFER9 vtxBuff;
+	m_Mesh->GetVertexBuffer(&vtxBuff);
+	LPDIRECT3DINDEXBUFFER9 idxBuff;
+	m_Mesh->GetIndexBuffer(&idxBuff);
+
+	const int fvf = m_Mesh->GetFVF();
+	const int numVertices = m_Mesh->GetNumVertices();
+	const int numBytesPerVertex = m_Mesh->GetNumBytesPerVertex();
+	const int numFace = m_Mesh->GetNumFaces();
+	const int option = m_Mesh->GetOptions(); // D3DXMESH_SYSTEMMEM, D3DXMESH_MANAGED, 
+
+
+	void *vertices;
+	m_Mesh->LockVertexBuffer(0, &vertices);
+	WORD *indices;
+	m_Mesh->LockIndexBuffer(0, (void**)&indices);
+
+
+	vector<int> adjInfo(numFace*3, 0);
+	m_Mesh->GenerateAdjacency(0.0, (DWORD*)&adjInfo[0]);
+
+	vector<int> optAdjInfo(numFace*3, 0);
+	m_Mesh->OptimizeInplace(
+		D3DXMESHOPT_COMPACT |
+		D3DXMESHOPT_ATTRSORT |
+		D3DXMESHOPT_VERTEXCACHE,
+		(DWORD*)&adjInfo[0],
+		(DWORD*)&optAdjInfo[0],
+		NULL,
+		NULL);
+
+
+	DWORD numAttr;
+	m_Mesh->GetAttributeTable( NULL, &numAttr );
+
+	vector<D3DXATTRIBUTERANGE> attrRangeBuff(numAttr);
+	m_Mesh->GetAttributeTable( &attrRangeBuff[0], &numAttr );
+
+
+	m_Mesh->CloneMeshFVF(m_Mesh->GetOptions(),
+		D3DFVF_XYZ | D3DFVF_NORMAL,
+		graphic::GetDevice(),
+		&m_CloneMesh
+		);
+
+
+
+
+
+	m_Mtrl.InitBlue();
+
+	Vector4 color(1,1,1,1);
+	m_Light.Init(graphic::cLight::LIGHT_DIRECTIONAL,
+		color * 0.4f, color, color *0.6f, Vector3(0,-1,0));
+	m_Light.Bind(0);
+
 	m_camPos = Vector3(100,100,-500);
 	m_lookAtPos = Vector3(0,0,0);
 	UpdateCamera();
@@ -107,6 +174,7 @@ void CModelView::Init()
 		0, // 활성화/ 비활성화 하려는 광원 리스트 내의 요소
 		true); // true = 활성화 ， false = 비활성화
 }
+
 
 void CModelView::UpdateCamera()
 {
