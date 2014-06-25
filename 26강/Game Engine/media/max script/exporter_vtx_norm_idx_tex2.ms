@@ -3,6 +3,8 @@ global Outfile -- ¿˙¿Âµ… file
 global g_FilePath
 
 global g_varSetMeshes = #()
+global g_varSetMaterials = #()
+
 
 struct VtxNormTex
 (
@@ -155,6 +157,8 @@ fn WriteTVertTVFace obj =
 
 fn WriteVtxNormTex obj = 
 (
+	format "MATERIAL_ID % \n" ((GetMtrlId obj)-1) to:Outfile
+
 	WriteVertex obj
 	WriteIndex obj
 	WriteNormal obj
@@ -162,11 +166,91 @@ fn WriteVtxNormTex obj =
 )
 
 
+fn GetMtrlId obj =
+(
+	if classOf obj.material == UndefinedClass then
+	(
+		return 0
+	)
+	
+	if classOf obj.material == Standardmaterial then
+	(
+		for i=1 to g_varSetMaterials.count do
+		(
+			if obj.material == g_varSetMaterials[i] then
+			(
+				return (i as integer)
+			)
+		)
+	)
+	
+	return 0
+)
+
+
+
+fn CollectMaterial = 
+(
+	temp = standard()
+	Append g_varSetMaterials temp
+
+	for i=1 to objects.count do
+	(
+		if objects[i].material == undefined do continue
+
+		if classof objects[i].material == standardmaterial then
+		(
+			Append g_varSetMaterials objects[i].material
+		)
+
+		if classof objects[i].material == multimaterial then
+		(
+			for j=1 to objects[i].material.count do
+			(
+				Append g_varSetMaterials objects[i].material[j]
+			)
+		)
+	)
+)
+
+
+
+
+fn WriteMaterial = 
+(
+	format "MATERIALGROUP = %\n" g_varSetMaterials.count to:Outfile
+
+	for i=1 to g_varSetMaterials.count do
+	(
+		format "MATERIAL %\n" (i-1) to:Outfile
+
+		format "DIFFUSE % % % 1\n"  (g_varSetMaterials[i].Diffuse.r/255) (g_varSetMaterials[i].Diffuse.g/255) (g_varSetMaterials[i].Diffuse.b/255) to:Outfile
+		format "AMBIENT % % % 1\n"  (g_varSetMaterials[i].Ambient.r/255) (g_varSetMaterials[i].Ambient.g/255) (g_varSetMaterials[i].Ambient.b/255) to:Outfile
+		format "SPECULAR % % % 1\n" (g_varSetMaterials[i].Specular.r/255) (g_varSetMaterials[i].Specular.g/255) (g_varSetMaterials[i].Specular.b/255) to:Outfile
+		format "EMISSIVE % % % 0\n" (g_varSetMaterials[i].Diffuse.r/255) (g_varSetMaterials[i].Diffuse.g/255) (g_varSetMaterials[i].Diffuse.b/255) to:Outfile
+		format "POWER %\n"  g_varSetMaterials[i].SpecularLevel to:Outfile
+
+		-- Diffuse Map
+		if g_varSetMaterials[i].DiffuseMap != undefined then
+		(
+			format "TEXTURE %\n" g_varSetMaterials[i].DiffuseMap.filename to:Outfile
+		)
+		else
+		(
+			format "TEXTURE  \n"  to:Outfile
+		)
+	)
+)
+
+
 fn ExporterStart = 
 (
 	CollectObject()
+	CollectMaterial()
 
 	Outfile = createfile g_FilePath
+
+	WriteMaterial()
 
 	for i=1 to g_varSetMeshes.count do
 	(
@@ -190,7 +274,6 @@ fn ExporterStart =
 	close Outfile
 
 )
-
 
 
 rollout ui "≥»≥»" width:387 height:266
