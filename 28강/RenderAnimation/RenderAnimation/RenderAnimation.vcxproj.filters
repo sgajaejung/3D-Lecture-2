@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\base\mesh.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -87,5 +88,6 @@
     <ClInclude Include="..\..\base\mesh.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
 </Project>

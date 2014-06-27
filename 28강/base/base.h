@@ -4,7 +4,9 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <string>
+#include <vector>
 using std::string;
+using std::vector;
 
 namespace graphic {
 	LPDIRECT3DDEVICE9 GetDevice();

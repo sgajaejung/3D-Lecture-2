@@ -5,6 +5,7 @@
 #include <d3dx9.h>
 #include "../../math/Math.h"
 #include "../../base/base.h"
+#include "Utility.h"
 #include <vector>
 #include <map>
 #pragma comment( lib, "d3d9.lib" )
@@ -344,10 +345,12 @@ void Render(int timeDelta)
 		g_pDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, g_VtxBuff.GetVertexCount(), 
 			0, g_IdxBuff.GetFaceCount());
 
+		graphic::RenderAxis();
 
 		Matrix44 tm = g_LocalTm;
 		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&tm);
 		g_Mesh.Render(tm);
+
 
 		//랜더링 끝
 		g_pDevice->EndScene();
@@ -406,11 +409,11 @@ bool InitVertexBuffer()
 			for( int k=0; k < colCellCnt; ++k )
 			{
 				indices[ baseIndex] = (i * colVtxCnt) + k;
-				indices[ baseIndex + 1] = (i   * colVtxCnt) + k + 1;
+				indices[ baseIndex + 1] = (i * colVtxCnt) + k + 1;
 				indices[ baseIndex + 2] = ((i+1) * colVtxCnt) + k;
 
 				indices[ baseIndex + 3] = ((i+1) * colVtxCnt) + k;
-				indices[ baseIndex + 4] = (i   * colVtxCnt) + k + 1;
+				indices[ baseIndex + 4] = (i * colVtxCnt) + k + 1;
 				indices[ baseIndex + 5] = ((i+1) * colVtxCnt) + k + 1;
 
 				// next quad
