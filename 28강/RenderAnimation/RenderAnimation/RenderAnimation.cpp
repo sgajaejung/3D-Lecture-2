@@ -433,7 +433,7 @@ bool InitVertexBuffer()
 	// 카메라, 투영행렬 생성
 	UpdateCamera();
 
-	g_matProj.SetProjection(D3DX_PI * 0.5f, (float)WINSIZE_X / (float) WINSIZE_Y, 1.f, 1000.0f) ;
+	g_matProj.SetProjection(D3DX_PI * 0.5f, (float)WINSIZE_X / (float) WINSIZE_Y, 1.f, 10000.0f) ;
 	g_pDevice->SetTransform(D3DTS_PROJECTION, (D3DXMATRIX*)&g_matProj) ;
 
 	g_Light.Bind(0);
