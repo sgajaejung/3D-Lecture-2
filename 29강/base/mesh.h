@@ -13,6 +13,7 @@ namespace graphic
 		bool Create(const string &fileName);
 		void Render(const Matrix44 &tm);
 		void Move(const float elapseT);
+		Matrix44& GetTM();
 
 
 	private:
@@ -23,5 +24,7 @@ namespace graphic
 
 		Matrix44 m_tm;
 	};
-	
+
+
+	inline Matrix44& cMesh::GetTM() { return m_tm; }
 }

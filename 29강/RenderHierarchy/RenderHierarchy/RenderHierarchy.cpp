@@ -41,6 +41,10 @@ const float CELL_SIZE = 50.f;
 const int COL_CELL_COUNT = 16;
 const int ROW_CELL_COUNT = 16;
 graphic::cMesh g_mesh;
+Vector3 g_PenguinPos(0,0,0);
+Vector3 g_PenguinVel(0, 0, 300.f);
+
+graphic::cMesh g_wing;
 
 
 LPDIRECT3DDEVICE9 graphic::GetDevice()
@@ -200,11 +204,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 			const int y = pos.y - g_CurPos.y;
 			g_CurPos = pos;
 
-			//Matrix44 mat1;
-			//mat1.SetRotationY( -x * 0.01f );
-			//Matrix44 mat2;
-			//mat2.SetRotationX( -y * 0.01f );
-			//g_LocalTm *= (mat1 * mat2);
+			Matrix44 mat1;
+			mat1.SetRotationY( -x * 0.01f );
+			Matrix44 mat2;
+			mat2.SetRotationX( -y * 0.01f );
+			g_LocalTm *= (mat1 * mat2);
 		}
 		if (g_RButtonDown)
 		{
@@ -257,6 +261,35 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 //랜더
 void Render(int timeDelta)
 {
+	float elapse_fT = (timeDelta * 0.001f);
+	float incT = elapse_fT;
+
+	//const Vector3 mov = g_PenguinVel * incT;
+	//g_PenguinPos += mov;
+	//Matrix44 matMov;
+	//matMov.SetTranslate(g_PenguinPos);
+	//g_mesh.GetTM() = matMov;
+
+	//g_camPos += mov;
+	//g_lookAtPos += mov;
+	//UpdateCamera();
+
+	{
+		static float angle = 0.f;
+		angle += elapse_fT;
+
+		Matrix44 matR;
+		matR.SetRotationZ(angle);
+		Matrix44 matT;
+		matT.SetTranslate(Vector3(180, 180,0));
+		Matrix44 matS;
+		matS.SetScale(Vector3(0.7f, 0.1f, 0.3f));
+
+		g_wing.GetTM() = matS * matR * matT;
+	}
+
+
+
 	//화면 청소
 	if (SUCCEEDED(g_pDevice->Clear( 
 		0,			//청소할 영역의 D3DRECT 배열 갯수		( 전체 클리어 0 )
@@ -272,13 +305,15 @@ void Render(int timeDelta)
 
 		RenderFPS(timeDelta);
 
-		Matrix44 tm = g_LocalTm;
-		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&tm);
-
+		Matrix44 identity;
+		g_pDevice->SetTransform(D3DTS_WORLD, (D3DXMATRIX*)&identity);
 		g_grid.Render();
-
 		RenderAxis();
 		g_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+
+		g_mesh.Render(g_LocalTm);
+		g_wing.Render(g_LocalTm);
 
 
 		//랜더링 끝
@@ -294,7 +329,15 @@ bool InitVertexBuffer()
 	g_grid.Create(ROW_CELL_COUNT, COL_CELL_COUNT, CELL_SIZE);
 
 
-	g_mesh.Create( "cube.dat" );
+	g_mesh.Create( "../../media/cube.dat" );
+	g_wing.Create( "../../media/cube.dat" );
+
+	//Matrix44 matS;
+	//matS.SetScale(Vector3(0.7f, 0.1f, 0.3f));
+	//Matrix44 matT;
+	//matT.SetTranslate(Vector3(180, 180,0));
+
+	//g_wing.GetTM() = matS * matT;
 
 
 	// 카메라, 투영행렬 생성
