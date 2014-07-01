@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TreeTraining", "TreeTraining\TreeTraining.vcxproj", "{09D98D23-F60B-4815-A9AA-CE1CBD6BF72A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TreeRender", "TreeRender\TreeRender.vcxproj", "{6A9EF2BB-8679-43F9-8576-7DA239D281FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09D98D23-F60B-4815-A9AA-CE1CBD6BF72A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{09D98D23-F60B-4815-A9AA-CE1CBD6BF72A}.Debug|Win32.Build.0 = Debug|Win32
+		{09D98D23-F60B-4815-A9AA-CE1CBD6BF72A}.Release|Win32.ActiveCfg = Release|Win32
+		{09D98D23-F60B-4815-A9AA-CE1CBD6BF72A}.Release|Win32.Build.0 = Release|Win32
+		{6A9EF2BB-8679-43F9-8576-7DA239D281FD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6A9EF2BB-8679-43F9-8576-7DA239D281FD}.Debug|Win32.Build.0 = Debug|Win32
+		{6A9EF2BB-8679-43F9-8576-7DA239D281FD}.Release|Win32.ActiveCfg = Release|Win32
+		{6A9EF2BB-8679-43F9-8576-7DA239D281FD}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
