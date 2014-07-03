@@ -13,7 +13,8 @@ namespace graphic
 
 		bool Move(const float elapseTime);
 		void Render(const Matrix44 &parentTm);
-		void Clear();	
+		void Clear();
+		cBoneNode* GetRoot();
 		cBoneNode* FindBone(const int id);
 
 
@@ -22,4 +23,6 @@ namespace graphic
 		int m_id;
 	};
 
+
+	inline cBoneNode* cBoneMgr::GetRoot() { return m_root; }
 }
