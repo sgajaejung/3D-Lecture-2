@@ -5,11 +5,11 @@ namespace graphic
 {
 	class cBoneNode;
 
-	class cBone
+	class cBoneMgr
 	{
 	public:
-		cBone(const int id, const sRawMeshGroup &rawMeshes);
-		virtual ~cBone();
+		cBoneMgr(const int id, const sRawMeshGroup &rawMeshes);
+		virtual ~cBoneMgr();
 
 		bool Move(const float elapseTime);
 		void Render(const Matrix44 &parentTm);

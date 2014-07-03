@@ -20,8 +20,6 @@ namespace graphic
 
 	protected:
 		void SetAnimationRec( cBoneNode *node, const sRawAniGroup &rawAni, int nAniFrame );
-		bool MoveRec(cBoneNode *node, const float elapseTime);
-		void RenderRec(cBoneNode *node, const Matrix44 &parentTm);
 
 
 	private:

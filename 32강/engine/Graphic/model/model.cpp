@@ -4,7 +4,7 @@
 #include "node.h"
 #include "../manager/resourcemanager.h"
 #include "mesh.h"
-#include "bone.h"
+#include "bonemgr.h"
 
 
 using namespace graphic;
@@ -34,7 +34,7 @@ bool cModel::Create(const string &modelName)
 	// 스키닝 애니메이션이면 Bone을 생성한다.
 	if (isSkinnedMesh)
 	{
-		m_bone = new cBone(0, *rawMeshes);
+		m_bone = new cBoneMgr(0, *rawMeshes);
 	}
 
 	// 메쉬 생성.

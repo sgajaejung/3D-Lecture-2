@@ -78,7 +78,7 @@
     <ClInclude Include="importer\modelimporter.h" />
     <ClInclude Include="manager\Renderer.h" />
     <ClInclude Include="manager\resourcemanager.h" />
-    <ClInclude Include="model\bone.h" />
+    <ClInclude Include="model\bonemgr.h" />
     <ClInclude Include="model\bonenode.h" />
     <ClInclude Include="model\mesh.h" />
     <ClInclude Include="model\model.h" />
@@ -100,7 +100,7 @@
     <ClCompile Include="importer\modelimporter.cpp" />
     <ClCompile Include="manager\Renderer.cpp" />
     <ClCompile Include="manager\resourcemanager.cpp" />
-    <ClCompile Include="model\bone.cpp" />
+    <ClCompile Include="model\bonemgr.cpp" />
     <ClCompile Include="model\bonenode.cpp" />
     <ClCompile Include="model\mesh.cpp" />
     <ClCompile Include="model\model.cpp" />

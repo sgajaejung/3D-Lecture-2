@@ -59,34 +59,16 @@ void cBone::SetAnimationRec( cBoneNode *node, const sRawAniGroup &rawAnies, int 
 // ¾Ö´Ï¸ŞÀÌ¼Ç
 bool cBone::Move(const float elapseTime)
 {
-	return MoveRec(m_root, elapseTime);
-}
-
-
-bool cBone::MoveRec( cBoneNode *node, const float elapseTime)
-{
-	RETV(!node, false);
-	const bool reval = node->Move( elapseTime );
-	BOOST_FOREACH (auto p, node->GetChildren())
-		MoveRec((cBoneNode*)p, elapseTime );
-	return true;
+	RETV(!m_root, false);
+	return m_root->Move(elapseTime);
 }
 
 
 // ½ºÄÌ·¹Åæ Ãâ·Â.
 void cBone::Render(const Matrix44 &parentTm)
 {
-	RenderRec(m_root, parentTm);
-}
-
-
-//  Ãâ·Â (Àç±Í)
-void cBone::RenderRec(cBoneNode *node, const Matrix44 &parentTm)
-{
-	RET(!node);
-	node->Render( parentTm );
-	BOOST_FOREACH (auto p, node->GetChildren())
-		RenderRec((cBoneNode*)p, parentTm );
+	RET(!m_root);
+	m_root->Render(parentTm);
 }
 
 

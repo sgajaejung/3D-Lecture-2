@@ -1,12 +1,12 @@
 
 #include "stdafx.h"
-#include "bone.h"
+#include "bonemgr.h"
 #include "bonenode.h"
 
 using namespace  graphic;
 
 
-cBone::cBone(const int id, const sRawMeshGroup &rawMeshes) :
+cBoneMgr::cBoneMgr(const int id, const sRawMeshGroup &rawMeshes) :
 	m_root(NULL)
 ,	m_id(id)
 {
@@ -27,14 +27,14 @@ cBone::cBone(const int id, const sRawMeshGroup &rawMeshes) :
 
 }
 
-cBone::~cBone()
+cBoneMgr::~cBoneMgr()
 {
 	Clear();
 }
 
 
 // 애니메이션
-bool cBone::Move(const float elapseTime)
+bool cBoneMgr::Move(const float elapseTime)
 {
 	RETV(!m_root, false);
 	return m_root->Move(elapseTime);
@@ -42,7 +42,7 @@ bool cBone::Move(const float elapseTime)
 
 
 // 스켈레톤 출력.
-void cBone::Render(const Matrix44 &parentTm)
+void cBoneMgr::Render(const Matrix44 &parentTm)
 {
 	RET(!m_root);
 	m_root->Render(parentTm);
@@ -50,14 +50,14 @@ void cBone::Render(const Matrix44 &parentTm)
 
 
 // 동적으로 할당된 객체 제거.
-void cBone::Clear()
+void cBoneMgr::Clear()
 {
 	SAFE_DELETE(m_root);
 }
 
 
 // BoneNode 찾아서 리턴.
-cBoneNode* cBone::FindBone(const int id)
+cBoneNode* cBoneMgr::FindBone(const int id)
 {
 	RETV(!m_root, NULL);
 	return (cBoneNode*)m_root->FindNode(id);

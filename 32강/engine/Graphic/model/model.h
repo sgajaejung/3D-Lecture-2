@@ -3,7 +3,7 @@
 
 namespace graphic
 {
-	class cBone;
+	class cBoneMgr;
 
 	DECLARE_TYPE_NAME_SCOPE(graphic, cModel)
 	class cModel : public memmonitor::Monitor<cModel, TYPE_NAME(cModel)>
@@ -20,12 +20,12 @@ namespace graphic
 		void SetTM(const Matrix44 &tm);
 		void MultiplyTM(const Matrix44 &tm);
 		const Matrix44& GetTM();
-		cBone* GetBone();
+		cBoneMgr* GetBone();
 
 
 	private:
 		vector<cNode*> m_meshes;
-		cBone *m_bone;
+		cBoneMgr *m_bone;
 		Matrix44 m_matTM;
 	};
 
@@ -33,5 +33,5 @@ namespace graphic
 	inline void cModel::SetTM(const Matrix44 &tm) { m_matTM = tm; }
 	inline void cModel::MultiplyTM(const Matrix44 &tm) { m_matTM *= tm; }
 	inline const Matrix44& cModel::GetTM() { return m_matTM; }
-	inline cBone* cModel::GetBone() { return m_bone; }
+	inline cBoneMgr* cModel::GetBone() { return m_bone; }
 }

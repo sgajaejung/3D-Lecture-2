@@ -55,10 +55,10 @@
     <ClInclude Include="model\rigidmesh.h">
       <Filter>model</Filter>
     </ClInclude>
-    <ClInclude Include="model\bone.h">
+    <ClInclude Include="model\bonenode.h">
       <Filter>model</Filter>
     </ClInclude>
-    <ClInclude Include="model\bonenode.h">
+    <ClInclude Include="model\bonemgr.h">
       <Filter>model</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,9 +100,6 @@
     <ClCompile Include="model\rigidmesh.cpp">
       <Filter>model</Filter>
     </ClCompile>
-    <ClCompile Include="model\bone.cpp">
-      <Filter>model</Filter>
-    </ClCompile>
     <ClCompile Include="model\bonenode.cpp">
       <Filter>model</Filter>
     </ClCompile>
@@ -111,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="importer\modelimporter.cpp">
       <Filter>importer</Filter>
+    </ClCompile>
+    <ClCompile Include="model\bonemgr.cpp">
+      <Filter>model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
