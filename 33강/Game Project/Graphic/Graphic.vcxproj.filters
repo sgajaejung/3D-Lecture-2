@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="graphic.h" />
+    <ClInclude Include="model\node.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\mesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="base\DxInit.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\indexbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\light.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\material.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\texture.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\vertexbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\resourcemanager.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="model\rawmesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="importer\modelimporter.h">
+      <Filter>importer</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\Renderer.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="base\vertexformat.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="model\track.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\rawani.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\bonenode.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\bone.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\rigidmesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\skinnedmesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="model\node.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\mesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="base\DxInit.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\indexbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\light.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\material.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\texture.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\vertexbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\resourcemanager.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="importer\modelimporter.cpp">
+      <Filter>importer</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\Renderer.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="model\track.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\bonenode.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\bone.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\rigidmesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\skinnedmesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="model">
+      <UniqueIdentifier>{26b94ef7-1f2c-401f-a7dd-bcfc4a70711c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{c5706fb9-e586-41aa-9ea2-ac17edb7c4d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager">
+      <UniqueIdentifier>{804bc56f-36fa-4643-8c34-4d4bc353e013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="importer">
+      <UniqueIdentifier>{bb4cb441-0f33-418f-a38f-2d1a634991c6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
