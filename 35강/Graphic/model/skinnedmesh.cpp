@@ -41,7 +41,7 @@ void cSkinnedMesh::ApplyPalette()
 		{
 			const sWeight *w = &weight.w[ k];
 			Vector3 v = m_rawMesh.vertices[ vtxIdx] * m_palette[ w->bone];
-			Vector3 n = m_rawMesh.normals[ vtxIdx] * m_palette[ w->bone];
+			Vector3 n = m_rawMesh.normals[ vtxIdx].MultiplyNormal( m_palette[ w->bone] );
 			vertices[ vtxIdx].p += v * w->weight;
 			vertices[ vtxIdx].n += n * w->weight;
 		}
