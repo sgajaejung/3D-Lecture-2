@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1.Shader", "Shader\Shader.vcxproj", "{86171D30-DA2B-4315-9D0C-96D351DB8CC6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2.Shader_Texture", "Shader_Texture\Shader_Texture.vcxproj", "{0369BFBC-6B33-4462-AE2E-74D6823F0AE8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3.Shader_Normal", "Shader_Normal\Shader_Normal.vcxproj", "{CCCF1092-77E8-4FAB-9CC8-C268C7DF8B7B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86171D30-DA2B-4315-9D0C-96D351DB8CC6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{86171D30-DA2B-4315-9D0C-96D351DB8CC6}.Debug|Win32.Build.0 = Debug|Win32
+		{86171D30-DA2B-4315-9D0C-96D351DB8CC6}.Release|Win32.ActiveCfg = Release|Win32
+		{86171D30-DA2B-4315-9D0C-96D351DB8CC6}.Release|Win32.Build.0 = Release|Win32
+		{0369BFBC-6B33-4462-AE2E-74D6823F0AE8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0369BFBC-6B33-4462-AE2E-74D6823F0AE8}.Debug|Win32.Build.0 = Debug|Win32
+		{0369BFBC-6B33-4462-AE2E-74D6823F0AE8}.Release|Win32.ActiveCfg = Release|Win32
+		{0369BFBC-6B33-4462-AE2E-74D6823F0AE8}.Release|Win32.Build.0 = Release|Win32
+		{CCCF1092-77E8-4FAB-9CC8-C268C7DF8B7B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CCCF1092-77E8-4FAB-9CC8-C268C7DF8B7B}.Debug|Win32.Build.0 = Debug|Win32
+		{CCCF1092-77E8-4FAB-9CC8-C268C7DF8B7B}.Release|Win32.ActiveCfg = Release|Win32
+		{CCCF1092-77E8-4FAB-9CC8-C268C7DF8B7B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
