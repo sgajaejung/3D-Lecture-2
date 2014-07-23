@@ -42,7 +42,7 @@ VS_OUTPUT VS_pass0(
 
 	// 정점 색
 	float3 L = -vLightDir;
-	float3 N = normalize( mul(Normal, (float3x3)mWIT) ); // 월드 좌표계에서의 법선.
+	float3 N = normalize( mul( float4(Normal,0), mWIT) ); // 월드 좌표계에서의 법선.
 	
 	Out.Diffuse = I_a * K_a + 
 					I_d * K_d * max(0, dot(N,L));
@@ -75,4 +75,5 @@ technique TShader
         VertexShader = compile vs_3_0 VS_pass0();
         PixelShader  = compile ps_3_0 PS_pass0();
     }
+
 }

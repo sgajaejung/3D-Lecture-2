@@ -281,9 +281,9 @@ void Render(int timeDelta)
 		g_shader.SetVector("vLightDir", Vector3(0,-1,0));
 		g_shader.SetMatrix("mWVP", g_LocalTm * g_matView * g_matProj);
 
-		Matrix44 mWIT = g_LocalTm.Inverse();
-		mWIT.Transpose();
-		g_shader.SetMatrix("mWIT", mWIT);
+		//Matrix44 mWIT = g_LocalTm.Inverse();
+		//mWIT.Transpose();
+		g_shader.SetMatrix("mWIT", g_LocalTm);
 
 		g_shader.Begin();
 		g_shader.BeginPass(0);

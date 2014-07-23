@@ -277,12 +277,16 @@ void Render(int timeDelta)
 		RenderFPS(timeDelta);
 		RenderAxis();
 
+		Matrix44 matS;
+		matS.SetScale(Vector3(1, 2, 1));
+		Matrix44 tm = matS * g_LocalTm;
+
 
 		g_shader.SetVector("vLightDir", Vector3(0,-1,0));
-		g_shader.SetMatrix("mWVP", g_LocalTm * g_matView * g_matProj);
+		g_shader.SetMatrix("mWVP", tm * g_matView * g_matProj);
 		g_shader.SetVector("vEyePos", g_camPos);
 
-		Matrix44 mWIT = g_LocalTm.Inverse();
+		Matrix44 mWIT = tm.Inverse();
 		mWIT.Transpose();
 		g_shader.SetMatrix("mWIT", mWIT);
 
