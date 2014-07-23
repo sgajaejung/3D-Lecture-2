@@ -35,9 +35,8 @@ Vector3 g_lookAtPos(0,0,0);
 Matrix44 g_matProj;
 Matrix44 g_matView;
 
-graphic::cCubeTex g_cube;
+graphic::cCube g_cube;
 graphic::cShader g_shader;
-graphic::cTexture g_texture;
 
 
 LPDIRECT3DDEVICE9 graphic::GetDevice()
@@ -62,8 +61,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine, 
 	int nCmdShow)
 {
-	wchar_t className[32] = L"Shader Texture";
-	wchar_t windowName[32] = L"Shader Texture";
+	wchar_t className[32] = L"Shader";
+	wchar_t windowName[32] = L"Shader";
 
 	//윈도우 클레스 정보 생성
 	//내가 이러한 윈도를 만들겠다 라는 정보
@@ -279,7 +278,6 @@ void Render(int timeDelta)
 		RenderAxis();
 
 		g_shader.SetMatrix("mWVP", g_LocalTm * g_matView * g_matProj);
-		g_shader.SetTexture("Tex", g_texture);
 
 		g_shader.Begin();
 		g_shader.BeginPass(0);
@@ -301,8 +299,7 @@ void Render(int timeDelta)
 bool InitVertexBuffer()
 {
 	g_cube.SetCube(Vector3(-50,-50,-50), Vector3(50,50,50));
-	g_shader.Create("hlsl_box_tex.fx", "TShader" );
-	g_texture.Create("../../media/강소라2.jpg");
+	g_shader.Create("hlsl_box.fx", "TShader" );
 
 
 	// 카메라, 투영행렬 생성

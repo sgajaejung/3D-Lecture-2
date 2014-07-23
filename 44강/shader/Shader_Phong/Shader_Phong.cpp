@@ -35,9 +35,8 @@ Vector3 g_lookAtPos(0,0,0);
 Matrix44 g_matProj;
 Matrix44 g_matView;
 
-graphic::cCubeTex g_cube;
 graphic::cShader g_shader;
-graphic::cTexture g_texture;
+LPD3DXMESH g_mesh;
 
 
 LPDIRECT3DDEVICE9 graphic::GetDevice()
@@ -62,8 +61,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine, 
 	int nCmdShow)
 {
-	wchar_t className[32] = L"Shader Texture";
-	wchar_t windowName[32] = L"Shader Texture";
+	wchar_t className[32] = L"Shader_Phong";
+	wchar_t windowName[32] = L"Shader_Phong";
 
 	//윈도우 클레스 정보 생성
 	//내가 이러한 윈도를 만들겠다 라는 정보
@@ -278,14 +277,18 @@ void Render(int timeDelta)
 		RenderFPS(timeDelta);
 		RenderAxis();
 
+
+		g_shader.SetVector("vLightDir", Vector3(0,-1,0));
 		g_shader.SetMatrix("mWVP", g_LocalTm * g_matView * g_matProj);
-		g_shader.SetTexture("Tex", g_texture);
+		g_shader.SetVector("vEyePos", g_camPos);
+
+		Matrix44 mWIT = g_LocalTm.Inverse();
+		mWIT.Transpose();
+		g_shader.SetMatrix("mWIT", mWIT);
 
 		g_shader.Begin();
 		g_shader.BeginPass(0);
-
-		g_cube.Render(g_LocalTm);
-
+		g_mesh->DrawSubset(0);
 		g_shader.EndPass();
 		g_shader.End();
 
@@ -300,9 +303,9 @@ void Render(int timeDelta)
 
 bool InitVertexBuffer()
 {
-	g_cube.SetCube(Vector3(-50,-50,-50), Vector3(50,50,50));
-	g_shader.Create("hlsl_box_tex.fx", "TShader" );
-	g_texture.Create("../../media/강소라2.jpg");
+	g_shader.Create("hlsl_box_normal_phong.fx", "TShader" );
+
+	D3DXCreateSphere(GetDevice(), 30, 20, 20,&g_mesh, NULL); 
 
 
 	// 카메라, 투영행렬 생성

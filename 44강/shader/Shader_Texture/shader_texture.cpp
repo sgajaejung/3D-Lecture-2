@@ -304,7 +304,6 @@ bool InitVertexBuffer()
 	g_shader.Create("hlsl_box_tex.fx", "TShader" );
 	g_texture.Create("../../media/강소라2.jpg");
 
-
 	// 카메라, 투영행렬 생성
 	UpdateCamera();
 
