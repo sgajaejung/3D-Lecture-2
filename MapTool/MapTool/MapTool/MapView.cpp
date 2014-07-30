@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CMapView, CView)
 	ON_WM_LBUTTONUP()
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 
@@ -113,10 +114,10 @@ void CMapView::Render()
 		g_pDevice->BeginScene();
 
 		//RenderFPS(timeDelta);
-		RenderAxis();
-
 		GetDevice()->SetRenderState( D3DRS_LIGHTING, FALSE);
 		m_grid.Render();
+		RenderAxis();
+
 
 		//랜더링 끝
 		g_pDevice->EndScene();
@@ -199,4 +200,18 @@ void CMapView::UpdateCamera()
 	dir.Normalize();
 	m_matView.SetView(m_camPos, dir, Vector3(0,1,0));
 	graphic::GetDevice()->SetTransform(D3DTS_VIEW, (D3DXMATRIX*)&m_matView);
+}
+
+
+void CMapView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	if (nChar == VK_TAB)
+	{
+		static bool flag = false;
+		GetDevice()->SetRenderState(D3DRS_CULLMODE, flag);
+		GetDevice()->SetRenderState(D3DRS_FILLMODE, flag? D3DFILL_SOLID : D3DFILL_WIREFRAME);
+		flag = !flag;
+	}
+
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
