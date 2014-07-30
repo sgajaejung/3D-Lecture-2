@@ -34,6 +34,7 @@ public:
 	bool m_RButtonDown;
 	bool m_MButtonDown;
 	CPoint m_curPos;
+	graphic::cGrid m_grid;
 
 
 protected:

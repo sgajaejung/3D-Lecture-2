@@ -88,6 +88,7 @@ bool CMapView::Init()
 		true); // true = 활성화 ， false = 비활성화
 
 
+	m_grid.Create(64,64,50.f);
 	m_dxInit = true;
 	return true;
 }
@@ -114,6 +115,8 @@ void CMapView::Render()
 		//RenderFPS(timeDelta);
 		RenderAxis();
 
+		GetDevice()->SetRenderState( D3DRS_LIGHTING, FALSE);
+		m_grid.Render();
 
 		//랜더링 끝
 		g_pDevice->EndScene();
