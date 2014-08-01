@@ -117,6 +117,12 @@
     <ClInclude Include="..\..\math\vector4.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="TopPanel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPanel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapTool.cpp">
@@ -184,6 +190,12 @@
     </ClCompile>
     <ClCompile Include="..\..\math\vector4.cpp">
       <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="TopPanel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPanel.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,9 @@
 
 using namespace graphic;
 
+const int WINSIZE_X = 1024;		//초기 윈도우 가로 크기
+const int WINSIZE_Y = 768;	//초기 윈도우 세로 크기
+
 
 // CMapView
 CMapView::CMapView() :
@@ -67,9 +70,6 @@ LPDIRECT3DDEVICE9 graphic::GetDevice()
 
 bool CMapView::Init()
 {
-	const int WINSIZE_X = 1024;		//초기 윈도우 가로 크기
-	const int WINSIZE_Y = 768;	//초기 윈도우 세로 크기
-
 	if (!graphic::InitDirectX(m_hWnd, WINSIZE_X, WINSIZE_Y, g_pDevice))
 	{
 		return 0;
@@ -90,6 +90,8 @@ bool CMapView::Init()
 
 
 	m_grid.Create(64,64,50.f);
+	m_cube.SetCube(Vector3(-10,-10,-10), Vector3(10,10,10));
+	m_cube.SetColor( 0xFF0000FF );
 	m_dxInit = true;
 	return true;
 }
@@ -115,9 +117,13 @@ void CMapView::Render()
 
 		//RenderFPS(timeDelta);
 		GetDevice()->SetRenderState( D3DRS_LIGHTING, FALSE);
+
+		Matrix44 matIdentity;
+		GetDevice()->SetTransform( D3DTS_WORLD, (D3DMATRIX*)&matIdentity);
 		m_grid.Render();
 		RenderAxis();
 
+		m_cube.Render(matIdentity);
 
 		//랜더링 끝
 		g_pDevice->EndScene();
@@ -154,6 +160,17 @@ void CMapView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 
 		UpdateCamera();
+	}
+	else
+	{
+		Vector3 orig, dir, pickPos;
+		GetRay(point.x, point.y, orig, dir);
+		if (m_grid.Pick(point.x, point.y, orig, dir, pickPos))
+		{
+			Matrix44 mT;
+			mT.SetTranslate(pickPos);
+			m_cube.SetTransform(mT);
+		}
 	}
 
 	CView::OnMouseMove(nFlags, point);
@@ -214,4 +231,27 @@ void CMapView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+
+void CMapView::GetRay(int sx, int sy, Vector3 &orig, Vector3 &dir)
+{
+	const float x =  ((sx * 2.0F / WINSIZE_X) - 1.0F );
+	const float y = -((sy * 2.0F / WINSIZE_Y) - 1.0F );
+
+	Vector3 v;
+	v.x = x / m_matProj._11;
+	v.y = y / m_matProj._22;
+	v.z =  1.0F;
+
+	Matrix44 m = m_matView.Inverse();
+
+	dir.x = v.x * m._11 + v.y * m._21 + v.z * m._31;
+	dir.y = v.x * m._12 + v.y * m._22 + v.z * m._32;
+	dir.z = v.x * m._13 + v.y * m._23 + v.z * m._33;
+	dir.Normalize();
+
+	orig.x = m._41;
+	orig.y = m._42;
+	orig.z = m._43;
 }

@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include "MapView.h"
 #include <MMSystem.h>
+#include "TopPanel.h"
 
 
 
@@ -86,6 +87,25 @@ BOOL CMapToolDlg::OnInitDialog()
 
 	m_mapView->Init();
 	m_mapView->ShowWindow(SW_SHOW);
+
+
+	//CTopPanel
+	const int PANEL_WIDTH = 400;
+	const int PANEL_HEIGHT = 800;
+
+
+	CTopPanel *dlg = new CTopPanel();
+	const CString StrClassName = AfxRegisterWndClass( CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS,
+		LoadCursor(NULL, IDC_ARROW), (HBRUSH)GetStockObject(COLOR_BTNFACE+1), 
+		LoadIcon(NULL, IDI_APPLICATION) );
+
+	dlg->CreateEx(0, StrClassName, L"Panel", 
+		WS_POPUP | WS_CAPTION | WS_SYSMENU | MFS_THICKFRAME, 
+		CRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT), this );
+
+	dlg->Init();
+	dlg->ShowWindow(SW_SHOW);
+
 
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.

@@ -11,6 +11,7 @@ namespace graphic
 
 		void Create( const int rowCellCount, const int colCellCount, const float cellSize );
 		void Render();
+		bool Pick(int x, int y, const Vector3 &orig, const Vector3 &dir, OUT Vector3 &out);
 
 		cVertexBuffer& GetVertexBuffer();
 		cIndexBuffer& GetIndexBuffer();

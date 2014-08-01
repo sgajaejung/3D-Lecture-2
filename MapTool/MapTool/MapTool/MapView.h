@@ -35,9 +35,12 @@ public:
 	bool m_MButtonDown;
 	CPoint m_curPos;
 	graphic::cGrid m_grid;
-
+	graphic::cCube m_cube;
 
 protected:
+	void GetRay(int sx, int sy, Vector3 &orig, Vector3 &dir);
+
+
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
