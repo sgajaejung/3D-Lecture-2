@@ -5,6 +5,12 @@
 #include "MapTool.h"
 #include "MapView.h"
 #include "../../etc/Utility.h"
+#include "MainPanel.h"
+
+
+CMapView *g_mapView = NULL;
+vector<graphic::cCube*> g_cubes;
+
 
 using namespace graphic;
 
@@ -17,7 +23,7 @@ CMapView::CMapView() :
 	m_dxInit(false)
 ,	m_RButtonDown(false)
 {
-
+	g_mapView = this;
 }
 
 CMapView::~CMapView()
@@ -124,6 +130,8 @@ void CMapView::Render()
 		RenderAxis();
 
 		m_cube.Render(matIdentity);
+		for (int i=0; i < (int)g_cubes.size(); ++i)
+			g_cubes[ i]->Render(matIdentity);
 
 		//랜더링 끝
 		g_pDevice->EndScene();
@@ -179,7 +187,18 @@ void CMapView::OnMouseMove(UINT nFlags, CPoint point)
 
 void CMapView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	Vector3 orig, dir, pickPos;
+	GetRay(point.x, point.y, orig, dir);
+	if (m_grid.Pick(point.x, point.y, orig, dir, pickPos))
+	{
+		graphic::cCube *newCube = new graphic::cCube();
+		newCube->SetCube(Vector3(-10,-10,-10), Vector3(10,10,10));
+		newCube->SetTransform( m_cube.GetTransform() );
+		newCube->SetColor(0xFF0000);
+		g_cubes.push_back( newCube );
+
+		g_mainPanel->InsertCube( *newCube );
+	}
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -254,4 +273,12 @@ void CMapView::GetRay(int sx, int sy, Vector3 &orig, Vector3 &dir)
 	orig.x = m._41;
 	orig.y = m._42;
 	orig.z = m._43;
+}
+
+
+void CMapView::SelectCube( int index )
+{
+	for (int i=0; i < (int)g_cubes.size(); ++i)
+		g_cubes[ i]->SetColor( 0xFF0000 );
+	g_cubes[ index]->SetColor( 0x00FF00 );
 }

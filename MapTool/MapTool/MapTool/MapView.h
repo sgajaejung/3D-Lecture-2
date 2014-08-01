@@ -11,6 +11,7 @@ public:
 	void Render();
 	void Update(float elapseT);
 	void UpdateCamera();
+	void SelectCube( int index );
 
 
 public:
@@ -36,6 +37,7 @@ public:
 	CPoint m_curPos;
 	graphic::cGrid m_grid;
 	graphic::cCube m_cube;
+
 
 protected:
 	void GetRay(int sx, int sy, Vector3 &orig, Vector3 &dir);

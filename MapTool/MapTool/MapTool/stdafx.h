@@ -64,4 +64,8 @@
 
 
 class CMainPanel;
+class CMapView;
 extern CMainPanel *g_mainPanel;
+extern CMapView *g_mapView;
+extern vector<graphic::cCube*> g_cubes;
+
