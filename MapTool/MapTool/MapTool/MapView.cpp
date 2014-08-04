@@ -278,6 +278,9 @@ void CMapView::GetRay(int sx, int sy, Vector3 &orig, Vector3 &dir)
 
 void CMapView::SelectCube( int index )
 {
+	if (index < 0)
+		return;
+
 	for (int i=0; i < (int)g_cubes.size(); ++i)
 		g_cubes[ i]->SetColor( 0xFF0000 );
 	g_cubes[ index]->SetColor( 0x00FF00 );
