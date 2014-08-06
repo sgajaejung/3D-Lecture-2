@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="PaintTexture.cpp" />
+    <ClCompile Include="..\..\base\grid.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\grid2.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\indexbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\light.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\line.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\material.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\texture.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\vertexbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\dxinit.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\matrix44.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\quaternion.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\vector3.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\math\vector4.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\etc\Utility.cpp">
+      <Filter>etc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{9db4cbee-ee24-42f8-ba8d-9aa63673aca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{d8974431-aa1c-4b58-b662-303397ee3d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{e0b35bed-8a30-4276-8fd9-07a027e46101}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\base\base.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\grid.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\grid2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\indexbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\light.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\line.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\material.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\texture.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vertexbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\vertexformat.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\dxinit.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\Math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\matrix44.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\quaternion.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\vector3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\math\vector4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\etc\Utility.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
